@@ -8,78 +8,74 @@
 <body>
 <div id="app">
 
-    <p style="color: red;">所有的打印数据，均在打印区里。
-        表格上是否有钱这列是el-checkbox，绑定了v-model</p>
-
+    <el-button type="primary" plain @click="addDepartment">添加新部门</el-button>
     <el-table :data="tableData" style="width: 100%">
 
-        <el-table-column label="出生日期" width="180">
+        <el-table-column label="部门" width="180">
             <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                <i class="el-icon-arrow-right"></i>
+                <span style="margin-left: 10px">{{ scope.row.department }}</span>
             </template>
         </el-table-column>
 
-        <el-table-column label="姓名" width="100">
+        <el-table-column label="管理员" width="130">
             <template slot-scope="scope">
                 <el-popover trigger="hover" placement="top">
-                    <p>姓名: {{ scope.row.name }}</p>
-                    <p>住址: {{ scope.row.address }}</p>
+                    <p>姓名: {{ scope.row.username }}</p>
+                    <p>联系方式: {{ scope.row.tel }}</p>
                     <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                        <el-tag size="medium">{{ scope.row.username }}</el-tag>
                     </div>
                 </el-popover>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="是否有钱" width="100">
-            <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.isRich">是</el-checkbox>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="备注" width="180">
-            <template slot-scope="scope">
-                <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="选择框" width="180">
-            <template slot-scope="scope">
-                <el-select v-model="scope.row.selectOption" clearable placeholder="请选择">
-                    <el-option
-                            v-for="item in selectOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="性别" width="180">
-            <template slot-scope="scope">
-                <el-radio v-model="scope.row.sex" label="0">女</el-radio>
-                <el-radio v-model="scope.row.sex" label="1">男</el-radio>
             </template>
         </el-table-column>
 
         <el-table-column label="操作">
             <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除                </el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
         </el-table-column>
 
     </el-table>
 
-    <br/>
+    <el-dialog title="添加部门" :visible.sync="addWindow">
+        <el-form :model="form">
+            <el-form-item label="部门名称" :label-width="formLabelWidth">
+                <el-input v-model="form.department" auto-complete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="addDepartmentDo">确 定</el-button>
+        </div>
+    </el-dialog>
 
-    <el-button type="primary" plain @click="getTabelData">获取表格数据</el-button>
-    <div style="margin-top: 20px">
-        <span>打印区</span>
-        <el-input type="textarea" v-model="printStr"></el-input>
-    </div>
+    <el-dialog title="编辑部门信息" :visible.sync="editWindow">
+        <el-form :model="form">
+            <el-form-item label="部门名称" :label-width="formLabelWidth">
+                <el-input v-model="form.department" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="管理员" :label-width="formLabelWidth">
+                <el-select v-model="form.sid" placeholder="请选择管理员">
+                    <el-option v-for="item in usernameList" :label="item.username" :value="item.sid" :key="item.sid"></el-option>
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="handleEditDo">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog
+            title="提示"
+            :visible.sync="delWindow"
+            width="30%">
+        <span>请确认是否删除该部门</span>
+        <span slot="footer" class="dialog-footer">
+    <el-button @click="delWindow = false">取 消</el-button>
+    <el-button type="primary" @click="handleDeleteDo">确 定</el-button>
+  </span>
+    </el-dialog>
 </div>
 
 <!-- 引入组件库 -->
@@ -92,56 +88,77 @@
         el: "#app",
         data: {
             printStr: "",
-
-            selectOptions : [
-                {value : "1", label : "选择一"},
-                {value : "2", label : "选择二"},
-                {value : "3", label : "选择三"},
-            ],
-
+            addWindow:false,
+            editWindow:false,
+            delWindow:false,
+            formLabelWidth: '120px',
+            form:{
+                pid:"",
+                sid:"",
+                department:"",
+                username:""
+            },
             tableData: [{
-                date: '2000-10-27',
-                name: '余小乐',
-                address: '北京',
-                isRich: false,
-                remark : "我是备注",
-                selectOption : "2",
-                sex : "0"
+                id:'11',
+                department: '党委部门',
+                username: '余小乐',
+                tel: '18624890001',
             }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄',
-                isRich: true,
-                remark : "",
-                selectOption : "",
-                sex : "1"
+                department: '行政部门',
+                username: '王小虎',
+                tel: '1370070002',
             }, {
-                date: '2016-05-01',
-                name: '小花',
-                address: '重庆市璧山区',
-                isRich: true,
-                remark : "",
-                selectOption : "",
-                sex : "0"
+                department: '学生工作处',
+                username: '小花',
+                tel: '15103720001',
             }, {
-                date: '1998-05-03',
-                name: '二哈',
-                address: '成都',
-                isRich: false,
-                remark : "",
-                selectOption : "",
-                sex : "1"
+                department: '教务处',
+                username: '二哈',
+                tel: '0371-6569304',
+            }],
+            usernameList:[{
+                    sid:'1',
+                    username:"王小明"
+                }, {
+                    sid:'2',
+                    username:"刘小红"
             }]
         },
         methods: {
             handleEdit(index, row) {
-                this.printStr = "点击编辑；index=" + department + "；row=" + JSON.stringify(row);
+                this.printStr = "点击编辑；index=" + row.department + "；row=" + JSON.stringify(row);
+                this.form.department = row.department;
+                this.form.pid = row.pid;
+                this.form.sid = this.usernameList[0].sid;
+                this.editWindow = true;
+                //获取部门内成员信息，填入usernameList，第一位为管理员
+                console.log(this.printStr);
+            },
+            handleEditDo:function(){
+                console.log("确认编辑部门");
+                //发送编辑后的部门请求，数据为form.department，form.pid，form.sid
+                this.editWindow = false;
             },
             handleDelete(index, row) {
-                this.printStr = "点击删除；index=" + department + "；row=" + JSON.stringify(row);
+                this.printStr = "点击删除；index=" + row.department + "；row=" + JSON.stringify(row);
+                this.form.pid = row.pid;
+                this.delWindow = true;
+                console.log(this.printStr);
             },
-            getTabelData(){
-                this.printStr = "表格数据：" + JSON.stringify(this.tableData);
+            handleDeleteDo:function(){
+                this.delWindow = false;
+                //发送删除部门请求，数据为form.pid
+                console.log("确认删除部门");
+            },
+            addDepartment:function () {
+                console.log("添加部门");
+                this.form.department = "";
+                this.addWindow = true;
+            },
+            addDepartmentDo:function () {
+                console.log("确认添加部门");
+                //发送添加部门请求，数据为form.department
+                this.addWindow = false;
             }
         }
     });

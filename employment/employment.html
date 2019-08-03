@@ -1,9 +1,9 @@
 <html>
 
 <head>
-    <title>关于yuleGH</title>
+    <title>关于我</title>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="lib/elementui/theme-chalk/index.css" type="text/css">
+    <link rel="stylesheet" href="../lib/elementui/theme-chalk/index.css" type="text/css">
     <style>
         .abbox { margin: 20px auto; width: 1100px; overflow: hidden; clear: both }
         .aboutme { background: #FFF; border-radius: 10px; overflow: hidden; width: 400px;margin: auto;}
@@ -22,17 +22,29 @@
 <div id="app">
     <div class="aboutme">
         <h2 class="ab_title">关于我</h2>
-        <div class="avatar" @click="daka">打 卡</div>
+        <div class="avatar" @click="employment">应 聘</div>
+        <el-dialog title="填写应聘信息" :visible.sync="employmentWindow" v-cloak>
+            <el-form :model="employment">
+                <el-form-item label="应聘部门" :label-width="formLabelWidth">
+                    <el-input v-model="employment.department" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="应聘职位" :label-width="formLabelWidth">
+                    <el-input v-model="employment.position" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="employmentWindow = false">取 消</el-button>
+                <el-button type="primary" @click="employmentDo">确 定</el-button>
+            </div>
+        </el-dialog>
         <div class="ab_con" v-cloak>
             <p>姓名：{{info.username}}</p>
             <p>性别：{{info.gender}}</p>
-            <p>部门：{{info.department}}</p>
-            <p>职位：{{info.position}}</p>
             <p>联系方式：{{info.tel}}</p>
             <p>联系地址：{{info.address}}</p>
-            <p>考勤：{{info.attend_status}}</p>
-            <p>薪酬：{{info.salary}}</p>
-            <p>薪酬状态：{{info.salary_status}}</p>
+            <p>应聘部门：{{info.department}}</p>
+            <p>应聘职位：{{info.position}}</p>
+            <p>应聘状态：{{info.employ_status}}</p>
             <el-button type="text" @click="updateWindow">修改个人信息</el-button>
 
             <el-dialog title="修改个人信息" :visible.sync="dialogFormVisible">
@@ -59,8 +71,8 @@
     </div>
 </div>
 <!-- 引入组件库 -->
-<script type="text/javascript" src="lib/vue.js"></script>
-<script type="text/javascript" src="lib/elementui/index.js"></script>
+<script type="text/javascript" src="../lib/vue.js"></script>
+<script type="text/javascript" src="../lib/elementui/index.js"></script>
 
 <script type="text/javascript">
     new Vue({
@@ -69,6 +81,7 @@
             info:{},
             form:{},
             dialogFormVisible: false,
+            employmentWindow:false,
             formLabelWidth: '120px'
         },
         methods: {
@@ -86,8 +99,12 @@
                 this.info.tel = this.form.tel;
                 this.info.address = this.form.address;
             },
-            daka:function () {
-                console.log("daka");
+            employment:function () {
+                this.employmentWindow = true;
+                console.log("应聘");
+            },
+            employmentDo:function () {
+                console.log("确认应聘");
             }
         }
     });
