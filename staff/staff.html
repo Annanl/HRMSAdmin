@@ -13,6 +13,7 @@
       width: 90px;
       color: #99a9bf;
     }
+
     .demo-table-expand .el-form-item {
       margin-right: 0;
       margin-bottom: 0;
@@ -20,166 +21,170 @@
     }
   </style>
 </head>
+
 <body>
   <div id="app">
     <el-button type="success" icon="el-icon-plus" @click="dialogFormVisible2=true" circle></el-button>
     <template>
-        <el-table
-        :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)"
-        stripe
-        style="width: 100%">
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="工号">
-                <span>{{ props.row.id }}</span>
-              </el-form-item>
-              <el-form-item label="姓名">
-                <span>{{ props.row.name }}</span>
-              </el-form-item>
-              <el-form-item label="性别">
-                <span>{{ props.row.gender }}</span>
-              </el-form-item>
-              <el-form-item label="电话">
-                <span>{{ props.row.phone }}</span>
-              </el-form-item>
-              <el-form-item label="地址">
-                <span>{{ props.row.address }}</span>
-              </el-form-item>
-              <el-form-item label="职位状态">
-                <span>{{ props.row.status }}</span>
-              </el-form-item>
-              <el-form-item label="职位">
-                <span>{{ props.row.position }}</span>
-              </el-form-item>
-              <el-form-item label="部门">
-                <span>{{ props.row.department }}</span>
-              </el-form-item>
-              <el-form-item label="薪资">
-                <span>{{ props.row.salary }}</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-        </el-table>
-        <el-table-column label="工号" prop="id">
-        </el-table-column>
-        <el-table-column label="姓名" prop="name">
-        </el-table-column>
-        <el-table-column label="部门" prop="department">
-        </el-table-column>
-        <el-table-column label="薪酬状态">
-          <template slot-scope="props">
-            <el-select v-model="form.salarystatus" placeholder="请选择薪酬状态">
-                <el-option label="已发" value="1"></el-option>
-                <el-option label="未发" value="2"></el-option>
+
+      <div class="container_table">
+        <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe
+          style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}">
+          <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="工号">
+                    <span>{{ props.row.id }}</span>
+                  </el-form-item>
+                  <el-form-item label="姓名">
+                    <span>{{ props.row.name }}</span>
+                  </el-form-item>
+                  <el-form-item label="性别">
+                    <span>{{ props.row.gender }}</span>
+                  </el-form-item>
+                  <el-form-item label="电话">
+                    <span>{{ props.row.phone }}</span>
+                  </el-form-item>
+                  <el-form-item label="地址">
+                    <span>{{ props.row.address }}</span>
+                  </el-form-item>
+                  <el-form-item label="职位">
+                    <span>{{ props.row.position }}</span>
+                  </el-form-item>
+                  <el-form-item label="部门">
+                    <span>{{ props.row.department }}</span>
+                  </el-form-item>
+                  <el-form-item label="薪资">
+                    <span>{{ props.row.salary }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+          <el-table-column label="工号" prop="id">
+          </el-table-column>
+          <el-table-column label="姓名" prop="name">
+          </el-table-column>
+          <el-table-column label="部门" prop="department">
+          </el-table-column>
+          <el-table-column label="薪资状态">
+            <template slot-scope="props">
+              <el-select v-model='props.row.value1' placeholder="选择薪酬状态">
+                <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
               </el-select>
             </template>
-        </el-table-column>
-        <el-table-column label="操作">
-          <template slot-scope="props">
-            <!--编辑-->
-            <el-button type="primary" icon="el-icon-edit" circle @click="dialogFormVisible = true"></el-button>
-            <!--删除-->
-            <el-button type="danger" icon="el-icon-delete" circle @click="open"></el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-dialog title="员工信息修改" :visible.sync="dialogFormVisible">
-          <el-form :model="form">
-            <el-form-item label="工号" :label-width="formLabelWidth">
-              <el-input v-model="form.id" disabled autocomplete="off"></el-input>
-            </el-form-item>
-           <el-form-item label="姓名" :label-width="formLabelWidth">
-              <el-input v-model="form.name" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="性别" :label-width="formLabelWidth">
-                <template>
-                    <el-radio v-model="radio" label="1">男</el-radio>
-                    <el-radio v-model="radio" label="2">女</el-radio>
-                  </template>
-            </el-form-item>
-           <el-form-item label="电话" :label-width="formLabelWidth">
-              <el-input v-model="form.phone" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="地址" :label-width="formLabelWidth">
-              <el-input v-model="form.address" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="职位" :label-width="formLabelWidth">
-              <el-select v-model="form.position" placeholder="请选择职位">
-                  <el-option label="职位一" value="1"></el-option>
-                  <el-option label="职位二" value="2"></el-option>
-                </el-select>
-            </el-form-item>
-           <el-form-item label="部门" :label-width="formLabelWidth">
-              <el-select v-model="form.department" placeholder="请选择部门">
-                  <el-option label="部门一" value="1"></el-option>
-                  <el-option label="部门二" value="2"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="薪资" :label-width="formLabelWidth">
-              <el-input v-model="form.salary" autocomplete="off" onkeyup = "value=value.replace(/[^\d]/g,'')"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-          </div>
-        </el-dialog>
+          </el-table-column>
+          <el-table-column label="打卡状态">
+            <template slot-scope="props">
+              <el-select v-model='props.row.value2' placeholder="选择打卡状态">
+                <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
 
-        <el-dialog title="员工信息增加" :visible.sync="dialogFormVisible2">
-            <el-form :model="form">
-              <el-form-item label="工号" :label-width="formLabelWidth">
-                <el-input v-model="form.id" autocomplete="off"></el-input>
-              </el-form-item>
-             <el-form-item label="姓名" :label-width="formLabelWidth">
-                <el-input v-model="form.name" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="性别" :label-width="formLabelWidth">
-                  <template>
-                      <el-radio v-model="radio" label="1">男</el-radio>
-                      <el-radio v-model="radio" label="2">女</el-radio>
-                    </template>
-              </el-form-item>
-             <el-form-item label="电话" :label-width="formLabelWidth">
-                <el-input v-model="form.phone" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="地址" :label-width="formLabelWidth">
-                <el-input v-model="form.address" autocomplete="off"></el-input>
-              </el-form-item>
-              <el-form-item label="职位" :label-width="formLabelWidth">
-                <el-select v-model="form.position" placeholder="请选择职位">
-                    <el-option label="职位一" value="1"></el-option>
-                    <el-option label="职位二" value="2"></el-option>
-                  </el-select>
-              </el-form-item>
-             <el-form-item label="部门" :label-width="formLabelWidth">
-                <el-select v-model="form.department" placeholder="请选择部门">
-                    <el-option label="部门一" value="1"></el-option>
-                    <el-option label="部门二" value="2"></el-option>
-                  </el-select>
-              </el-form-item>
-              <el-form-item label="薪资" :label-width="formLabelWidth">
-                <el-input v-model="form.salary" autocomplete="off" onkeyup = "value=value.replace(/[^\d]/g,'')"></el-input>
-              </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-              <el-button type="primary" @click="dialogFormVisible2 = false">确 定</el-button>
-            </div>
-          </el-dialog>
-          <div class="block">
-              <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="currentPage"
-                :page-sizes="[5, 10, 15, 20]"
-                :page-size="5"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="6">
-              </el-pagination>
-            </div>
+          <el-table-column label="操作">
+            <template slot-scope="props">
+              <!--编辑-->
+              <el-tooltip class="item" effect="dark" content="编辑" placement="top">
+                <el-button type="primary" icon="el-icon-edit" circle @click="dialogFormVisible = true"></el-button>
+              </el-tooltip>
+              <!--删除-->
+              <el-tooltip class="item" effect="dark" content="删除" placement="top">
+                <el-button type="danger" icon="el-icon-delete" circle @click="open"></el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination  @size-change="handleSizeChange" @current-change="current_change" layout="total, sizes, prev, pager, next, jumper"  :page-sizes="pagesizes" :page-size="pagesize"
+        :total="total"  background>
+        </el-pagination>
+        </div>
+    </template>
+
+    <el-dialog title="员工信息修改" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="工号" :label-width="formLabelWidth">
+          <el-input v-model="form.id" disabled autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" :label-width="formLabelWidth">
+          <template>
+            <el-radio v-model="radio" label="1">男</el-radio>
+            <el-radio v-model="radio" label="2">女</el-radio>
+          </template>
+        </el-form-item>
+        <el-form-item label="电话" :label-width="formLabelWidth">
+          <el-input v-model="form.phone" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="地址" :label-width="formLabelWidth">
+          <el-input v-model="form.address" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="职位" :label-width="formLabelWidth">
+          <el-select v-model="form.position" placeholder="请选择职位">
+            <el-option label="职位一" value="1"></el-option>
+            <el-option label="职位二" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="部门" :label-width="formLabelWidth">
+          <el-select v-model="form.department" placeholder="请选择部门">
+            <el-option label="部门一" value="1"></el-option>
+            <el-option label="部门二" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="薪资" :label-width="formLabelWidth">
+          <el-input v-model="form.salary" autocomplete="off" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <el-dialog title="员工信息增加" :visible.sync="dialogFormVisible2">
+      <el-form :model="form">
+        <el-form-item label="工号" :label-width="formLabelWidth">
+          <el-input v-model="form.id" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" :label-width="formLabelWidth">
+          <el-input v-model="form.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="性别" :label-width="formLabelWidth">
+          <template>
+            <el-radio v-model="radio" label="1">男</el-radio>
+            <el-radio v-model="radio" label="2">女</el-radio>
+          </template>
+        </el-form-item>
+        <el-form-item label="电话" :label-width="formLabelWidth">
+          <el-input v-model="form.phone" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="地址" :label-width="formLabelWidth">
+          <el-input v-model="form.address" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="职位" :label-width="formLabelWidth">
+          <el-select v-model="form.position" placeholder="请选择职位">
+            <el-option label="职位一" value="1"></el-option>
+            <el-option label="职位二" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="部门" :label-width="formLabelWidth">
+          <el-select v-model="form.department" placeholder="请选择部门">
+            <el-option label="部门一" value="1"></el-option>
+            <el-option label="部门二" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="薪资" :label-width="formLabelWidth">
+          <el-input v-model="form.salary" autocomplete="off" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible2 = false">确 定</el-button>
+      </div>
+    </el-dialog>
     </template>
   </div>
   <!-- 引入组件库 -->
@@ -189,74 +194,52 @@
     new Vue({
       el: "#app",
       data: {
-        radio:'1',
-        currentPage:1,
+        radio: '1',
+        currentPage: 1,
+        pagesizes:[5,10,15],
         pagesize:5,
-        tableData: [{
-          id: '01',
-          name: '员工1',
-          phone: '123456',
-          address: '河南省郑州市',
-          gender: '男',
-          position: '普通职工',
-          department: '部门一',
-          salary: '5000',
-          salarystatus:'已发'
-        },
-        {
-          id: '02',
-          name: '员工2',
-          phone: '123456',
-          address: '河南省郑州市',
-          gender: '女',
-          position: '普通职工',
-          department: '部门一',
-          salary: '5000',
-          salarystatus:'未发'
-        },{
-          id: '02',
-          name: '员工2',
-          phone: '123456',
-          address: '河南省郑州市',
-          gender: '女',
-          position: '普通职工',
-          department: '部门一',
-          salary: '5000',
-          salarystatus:'未发'
-        },{
-          id: '02',
-          name: '员工2',
-          phone: '123456',
-          address: '河南省郑州市',
-          gender: '女',
-          position: '普通职工',
-          department: '部门一',
-          salary: '5000',
-          salarystatus:'未发'
-        },{
-          id: '02',
-          name: '员工2',
-          phone: '123456',
-          address: '河南省郑州市',
-          gender: '女',
-          position: '普通职工',
-          department: '部门一',
-          salary: '5000',
-          salarystatus:'未发'
-        },{
-          id: '02',
-          name: '员工2',
-          phone: '123456',
-          address: '河南省郑州市',
-          gender: '女',
-          position: '普通职工',
-          department: '部门一',
-          salary: '5000',
-          salarystatus:'未发'
-        },
-      ],
+        formLabelWidth: '120px',
+        value1: '',
+        value2: '',
         dialogFormVisible: false,
-        dialogFormVisible2:false,
+        dialogFormVisible2: false,
+        total:3,
+        tableData: [
+          {
+            id: '01',
+            name: '员工1',
+            phone: '123456',
+            address: '河南省郑州市',
+            gender: '男',
+            position: '普通职工',
+            department: '部门一',
+            salary: '5000',
+            salarystatus: '已发',
+            cardstatus: '未打卡'
+          },
+          {
+            id: '02',
+            name: '员工2',
+            phone: '123456',
+            address: '河南省郑州市',
+            gender: '女',
+            position: '普通职工',
+            department: '部门一',
+            salary: '5000',
+            salarystatus: '未发'
+          },
+          {
+            id: '03',
+            name: '员工2',
+            phone: '123456',
+            address: '河南省郑州市',
+            gender: '女',
+            position: '普通职工',
+            department: '部门一',
+            salary: '5000',
+            salarystatus: '未发'
+          }
+        ],
         form: {
           id: '',
           name: '',
@@ -267,36 +250,36 @@
           department: '',
           salary: ''
         },
-        formLabelWidth: '120px'
+        options1: [{
+          value: '选项1',
+          label: '已发'
+        }, {
+          value: '选项2',
+          label: '未发'
+        }],
+        options2: [{
+          value: '选项1',
+          label: '已打卡'
+        }, {
+          value: '选项2',
+          label: '未打卡'
+        }],
       },
+      /*created:function() {
+        axios.post(
+                url()+"/staff/login"
+            ).then(function(res) {
+                var resData = res.data;
+                if(resData.status === "0") { //0表示成功，1表示失败
+                    console.log("1");
+                    alert(resData);
+                }else{
+                    console.log("2");
+                    alert(resData);
+                }
+            });
+      },*/
       methods: {
-        save() {
-          var index = $("#index").val();
-          var id = $("#id").val();
-          var imgPath = $("#imgPath").val();
-          var goodsCostingPrice = $("#goodsCostingPrice").val();
-          //JSON格式数据
-          var str = { "id": id, "index": index, "imgPath": imgPath, "goodsCostingPrice": goodsCostingPrice };
-          $.ajax({
-            type: "get",
-            async: "false",
-            data: str,
-            dataType: "json", //一定要定义返回数据，否则就会显示“保存数据失败”
-            url: "${pageContext.request.contextPath}/shoppinggoods/specifications",
-            success: function (result) {
-              //接收数据
-              console.log(result.data);
-              alert("数据保存成功");
-              if (result.data == "ok") {
-              }
-              //接收list数据
-              //var list = result.list;
-            },
-            error: function (data) {
-              alert("数据保存失败")
-            }
-          });
-        },
         open() {
           this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
             confirmButtonText: '确定',
@@ -315,13 +298,15 @@
           });
         },
         handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+          this.pagesize=val;
+          console.log(`每页 ${val} 条`);
       },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+     current_change:function(currentPage){
+        this.currentPage = currentPage;
       }
       }
     });
   </script>
 </body>
+
 </html>

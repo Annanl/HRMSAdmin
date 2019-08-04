@@ -2,7 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d162d29a-6d86-4f82-bb0f-8d34d648afd8" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change afterPath="$PROJECT_DIR$/employment/employment.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aboutme.html" beforeDir="false" afterPath="$PROJECT_DIR$/aboutme.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/department/department.html" beforeDir="false" afterPath="$PROJECT_DIR$/department/department.html" afterDir="false" />
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -15,11 +22,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="531">
               <caret line="245" column="28" selection-start-line="245" selection-start-column="28" selection-end-line="245" selection-end-column="28" />
+=======
+            <state relative-caret-position="2475">
+              <caret line="99" column="43" selection-start-line="99" selection-start-column="43" selection-end-line="99" selection-end-column="43" />
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
               <folding>
                 <element signature="n#style#0;n#iframe#0;n#el-main#0;n#el-container#0;n#el-container#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="e#3511#7251#0" />
@@ -28,11 +40,49 @@
           </provider>
         </entry>
       </file>
+<<<<<<< HEAD
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/myconfig.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="225">
               <caret line="9" column="18" lean-forward="true" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+=======
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/aboutme.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="425">
+              <caret line="26" column="12" lean-forward="true" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/employment/employment.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="18" column="12" lean-forward="true" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dialog/notification/notification.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1475">
+              <caret line="59" column="20" selection-start-line="59" selection-start-column="20" selection-end-line="59" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/department/department.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1675">
+              <caret line="67" selection-start-line="67" selection-end-line="67" />
+              <folding>
+                <element signature="n#style#0;n#el-table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
             </state>
           </provider>
         </entry>
@@ -57,9 +107,11 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/department/department.html" />
         <option value="$PROJECT_DIR$/employment/employment.html" />
         <option value="$PROJECT_DIR$/aboutme.html" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/staff/staff.html" />
         <option value="$PROJECT_DIR$/lib/index.vue" />
         <option value="$PROJECT_DIR$/lib/vue.js" />
@@ -69,6 +121,8 @@
         <option value="$PROJECT_DIR$/lib/myconfig.js" />
         <option value="$PROJECT_DIR$/login.html" />
         <option value="$PROJECT_DIR$/index.html" />
+=======
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
       </list>
     </option>
   </component>
@@ -89,11 +143,40 @@
           <expand>
             <path>
               <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
+<<<<<<< HEAD
               <item name="hrmsadmin" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
               <item name="hrmsadmin" type="462c0819:PsiDirectoryNode" />
+=======
+              <item name="HRMSAdmin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="HRMSAdmin" type="462c0819:PsiDirectoryNode" />
+              <item name="department" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="HRMSAdmin" type="462c0819:PsiDirectoryNode" />
+              <item name="dialog" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="HRMSAdmin" type="462c0819:PsiDirectoryNode" />
+              <item name="dialog" type="462c0819:PsiDirectoryNode" />
+              <item name="notification" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="HRMSAdmin" type="462c0819:PsiDirectoryNode" />
+              <item name="employment" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
+              <item name="HRMSAdmin" type="462c0819:PsiDirectoryNode" />
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
               <item name="table" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -106,14 +189,17 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/img" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+<<<<<<< HEAD
       <recent name="F:\JetBrains\WSspace\hrmsadmin\lib" />
       <recent name="F:\JetBrains\WSspace\HRMSAdmin\lib" />
+=======
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
       <recent name="F:\JetBrains\WSspace\HRMSAdmin (2)\img" />
       <recent name="F:\JetBrains\WSspace\HRMSAdmin (2)" />
     </key>
@@ -149,13 +235,21 @@
       <workItem from="1564645639482" duration="8445000" />
       <workItem from="1564719685590" duration="7539000" />
       <workItem from="1564792371031" duration="4018000" />
+<<<<<<< HEAD
       <workItem from="1564801149212" duration="7904000" />
       <workItem from="1564877254502" duration="18235000" />
+=======
+      <workItem from="1564801149212" duration="759000" />
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="59315000" />
+=======
+    <option name="totallyTimeSpent" value="33935000" />
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -193,7 +287,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/vue.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-1984">
+            <caret line="4" column="13" lean-forward="true" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/upload/uploadForComponent.html" />
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/staff/staff.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/vue.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="451">
+          <caret line="1180" selection-start-line="1180" selection-end-line="1180" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/elementui/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="17470" column="63" selection-start-line="17470" selection-start-column="56" selection-end-line="17470" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
     <entry file="file://$PROJECT_DIR$/table/defineTemplateSelf.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
@@ -201,6 +329,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/vue.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -215,6 +344,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="450">
           <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+=======
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2475">
+          <caret line="99" column="43" selection-start-line="99" selection-start-column="43" selection-end-line="99" selection-end-column="43" />
+          <folding>
+            <element signature="n#style#0;n#iframe#0;n#el-main#0;n#el-container#0;n#el-container#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
         </state>
       </provider>
     </entry>
@@ -235,15 +373,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/staff/staff.html">
+    <entry file="file://$PROJECT_DIR$/employment/employment.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="204" column="10" lean-forward="true" selection-start-line="204" selection-start-column="10" selection-end-line="204" selection-end-column="10" />
+        <state relative-caret-position="150">
+          <caret line="18" column="12" lean-forward="true" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/staff/employment.html">
+    <entry file="file://$PROJECT_DIR$/aboutme.html">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="-825">
           <caret line="12" column="33" selection-start-line="12" selection-start-column="33" selection-end-line="12" selection-end-column="33" />
         </state>
@@ -329,6 +468,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="9" column="18" lean-forward="true" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+=======
+        <state relative-caret-position="425">
+          <caret line="26" column="12" lean-forward="true" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+>>>>>>> ac38e342712dcf773ed83a38d3d1c07b3263fbf9
         </state>
       </provider>
     </entry>
