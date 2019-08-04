@@ -19,6 +19,10 @@
       margin-bottom: 0;
       width: 50%;
     }
+
+    [v-cloak] {
+      display: none;
+    }
   </style>
 </head>
 
@@ -31,44 +35,44 @@
         <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe
           style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}">
           <el-table-column type="expand">
-              <template slot-scope="props">
-                <el-form label-position="left" inline class="demo-table-expand">
-                  <el-form-item label="工号">
-                    <span>{{ props.row.id }}</span>
-                  </el-form-item>
-                  <el-form-item label="姓名">
-                    <span>{{ props.row.name }}</span>
-                  </el-form-item>
-                  <el-form-item label="性别">
-                    <span>{{ props.row.gender }}</span>
-                  </el-form-item>
-                  <el-form-item label="电话">
-                    <span>{{ props.row.phone }}</span>
-                  </el-form-item>
-                  <el-form-item label="地址">
-                    <span>{{ props.row.address }}</span>
-                  </el-form-item>
-                  <el-form-item label="职位">
-                    <span>{{ props.row.position }}</span>
-                  </el-form-item>
-                  <el-form-item label="部门">
-                    <span>{{ props.row.department }}</span>
-                  </el-form-item>
-                  <el-form-item label="薪资">
-                    <span>{{ props.row.salary }}</span>
-                  </el-form-item>
-                </el-form>
-              </template>
-            </el-table-column>
-          <el-table-column label="工号" prop="id">
+            <template slot-scope="props">
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="工号">
+                  <span>{{ props.row.sid }}</span>
+                </el-form-item>
+                <el-form-item label="姓名">
+                  <span>{{ props.row.username }}</span>
+                </el-form-item>
+                <el-form-item label="性别">
+                  <span>{{ props.row.gender }}</span>
+                </el-form-item>
+                <el-form-item label="电话">
+                  <span>{{ props.row.tel }}</span>
+                </el-form-item>
+                <el-form-item label="地址">
+                  <span>{{ props.row.address }}</span>
+                </el-form-item>
+                <el-form-item label="职位">
+                  <span>{{ props.row.position }}</span>
+                </el-form-item>
+                <el-form-item label="部门">
+                  <span>{{ props.row.name }}</span>
+                </el-form-item>
+                <el-form-item label="薪资">
+                  <span>{{ props.row.salary }}</span>
+                </el-form-item>
+              </el-form>
+            </template>
           </el-table-column>
-          <el-table-column label="姓名" prop="name">
+          <el-table-column label="工号" prop="sid">
           </el-table-column>
-          <el-table-column label="部门" prop="department">
+          <el-table-column label="姓名" prop="username">
+          </el-table-column>
+          <el-table-column label="部门" prop="name">
           </el-table-column>
           <el-table-column label="薪资状态">
             <template slot-scope="props">
-              <el-select v-model='props.row.value1' placeholder="选择薪酬状态">
+              <el-select v-model='props.row.value1' placeholder="选择薪资状态" @change="selectFn(props.row.sid,$event)">
                 <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -76,7 +80,7 @@
           </el-table-column>
           <el-table-column label="打卡状态">
             <template slot-scope="props">
-              <el-select v-model='props.row.value2' placeholder="选择打卡状态">
+              <el-select v-model='props.row.value2' placeholder="选择打卡状态"  @change="selectFn(props.row.sid,$event)">
                 <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -87,102 +91,103 @@
             <template slot-scope="props">
               <!--编辑-->
               <el-tooltip class="item" effect="dark" content="编辑" placement="top">
-                <el-button type="primary" icon="el-icon-edit" circle @click="dialogFormVisible = true"></el-button>
+                <el-button type="primary" icon="el-icon-edit" circle @click="editstaff1(props.row.sid)"></el-button>
               </el-tooltip>
               <!--删除-->
               <el-tooltip class="item" effect="dark" content="删除" placement="top">
-                <el-button type="danger" icon="el-icon-delete" circle @click="open"></el-button>
+                <el-button type="danger" icon="el-icon-delete" circle @click="open(props.row.sid)"></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination  @size-change="handleSizeChange" @current-change="current_change" layout="total, sizes, prev, pager, next, jumper"  :page-sizes="pagesizes" :page-size="pagesize"
-        :total="total"  background>
+        <el-pagination @size-change="handleSizeChange" @current-change="current_change"
+          layout="total, sizes, prev, pager, next, jumper" :page-sizes="pagesizes" :page-size="pagesize" :total="total"
+          background>
         </el-pagination>
-        </div>
+      </div>
     </template>
-
+    <!--员工信息修改-->
     <el-dialog title="员工信息修改" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="工号" :label-width="formLabelWidth">
-          <el-input v-model="form.id" disabled autocomplete="off"></el-input>
+          <el-input v-model="form.sid" disabled auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="form.username" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="性别" :label-width="formLabelWidth">
           <template>
-            <el-radio v-model="radio" label="1">男</el-radio>
-            <el-radio v-model="radio" label="2">女</el-radio>
+            <el-radio v-model="form.gender" label="男"></el-radio>
+            <el-radio v-model="form.gender" label="女"></el-radio>
           </template>
         </el-form-item>
         <el-form-item label="电话" :label-width="formLabelWidth">
-          <el-input v-model="form.phone" autocomplete="off"></el-input>
+          <el-input v-model="form.tel" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth">
-          <el-input v-model="form.address" autocomplete="off"></el-input>
+          <el-input v-model="form.address" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth">
-          <el-select v-model="form.position" placeholder="请选择职位">
-            <el-option label="职位一" value="1"></el-option>
-            <el-option label="职位二" value="2"></el-option>
+          <el-select v-model="form.position" placeholder="选择职位">
+            <el-option label="职位一" value="职位一"></el-option>
+            <el-option label="职位二" value="职位二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门" :label-width="formLabelWidth">
-          <el-select v-model="form.department" placeholder="请选择部门">
-            <el-option label="部门一" value="1"></el-option>
-            <el-option label="部门二" value="2"></el-option>
+          <el-select v-model="form.deparment" placeholder="选择部门">
+            <el-option label="部门一" value="部门一"></el-option>
+            <el-option label="部门二" value="部门二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="薪资" :label-width="formLabelWidth">
-          <el-input v-model="form.salary" autocomplete="off" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+          <el-input v-model="form.salary" auto-complete="off" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button v-cloak @click="dialogFormVisible = false">取 消</el-button>
+        <el-button v-cloak type="primary" @click="editstaff2">确 定</el-button>
       </div>
     </el-dialog>
-
+    <!--员工信息增加-->
     <el-dialog title="员工信息增加" :visible.sync="dialogFormVisible2">
       <el-form :model="form">
         <el-form-item label="工号" :label-width="formLabelWidth">
-          <el-input v-model="form.id" autocomplete="off"></el-input>
+          <el-input v-model="form.sid" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.name" autocomplete="off"></el-input>
+          <el-input v-model="form.username" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="性别" :label-width="formLabelWidth">
           <template>
-            <el-radio v-model="radio" label="1">男</el-radio>
-            <el-radio v-model="radio" label="2">女</el-radio>
+            <el-radio v-model="form.gender" label="男"></el-radio>
+            <el-radio v-model="form.gender" label="女"></el-radio>
           </template>
         </el-form-item>
         <el-form-item label="电话" :label-width="formLabelWidth">
-          <el-input v-model="form.phone" autocomplete="off"></el-input>
+          <el-input v-model="form.tel" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="地址" :label-width="formLabelWidth">
-          <el-input v-model="form.address" autocomplete="off"></el-input>
+          <el-input v-model="form.address" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="职位" :label-width="formLabelWidth">
-          <el-select v-model="form.position" placeholder="请选择职位">
-            <el-option label="职位一" value="1"></el-option>
-            <el-option label="职位二" value="2"></el-option>
+          <el-select v-model="form.position" placeholder="选择职位">
+            <el-option label="职位一" value="职位一"></el-option>
+            <el-option label="职位二" value="职位二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="部门" :label-width="formLabelWidth">
-          <el-select v-model="form.department" placeholder="请选择部门">
-            <el-option label="部门一" value="1"></el-option>
-            <el-option label="部门二" value="2"></el-option>
+          <el-select v-model="form.deparmentId" placeholder="选择部门">
+            <el-option label="部门一" value="部门一"></el-option>
+            <el-option label="部门二" value="部门二"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="薪资" :label-width="formLabelWidth">
-          <el-input v-model="form.salary" autocomplete="off" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
+          <el-input v-model="form.salary" auto-complete="off" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible2 = false">确 定</el-button>
+        <el-button v-cloak @click="dialogFormVisible2 = false">取 消</el-button>
+        <el-button v-cloak type="primary" @click="addstaff">确 定</el-button>
       </div>
     </el-dialog>
     </template>
@@ -190,56 +195,39 @@
   <!-- 引入组件库 -->
   <script type="text/javascript" src="../lib/vue.js"></script>
   <script type="text/javascript" src="../lib/elementui/index.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="../lib/myconfig.js"></script>
   <script type="text/javascript">
     new Vue({
       el: "#app",
       data: {
         radio: '1',
         currentPage: 1,
-        pagesizes:[5,10,15],
-        pagesize:5,
+        pagesizes: [5, 10, 15],
+        pagesize: 5,
         formLabelWidth: '120px',
         value1: '',
         value2: '',
         dialogFormVisible: false,
         dialogFormVisible2: false,
-        total:3,
+        total: 1,
         tableData: [
           {
-            id: '01',
-            name: '员工1',
-            phone: '123456',
-            address: '河南省郑州市',
-            gender: '男',
-            position: '普通职工',
-            department: '部门一',
-            salary: '5000',
-            salarystatus: '已发',
-            cardstatus: '未打卡'
-          },
-          {
-            id: '02',
-            name: '员工2',
-            phone: '123456',
-            address: '河南省郑州市',
-            gender: '女',
-            position: '普通职工',
-            department: '部门一',
-            salary: '5000',
-            salarystatus: '未发'
-          },
-          {
-            id: '03',
-            name: '员工2',
-            phone: '123456',
-            address: '河南省郑州市',
-            gender: '女',
-            position: '普通职工',
-            department: '部门一',
-            salary: '5000',
-            salarystatus: '未发'
-          }
-        ],
+            pid:'',
+            sid: '',
+            username: '',
+            password: '',
+            tel: '',
+            address: '',
+            attend_status: '',
+            gender: '',
+            position: '',
+            name:'',
+            department_Id: '',
+            authority: '',
+            salary: '',
+            salary_status: ''
+          }],
         form: {
           id: '',
           name: '',
@@ -251,36 +239,42 @@
           salary: ''
         },
         options1: [{
-          value: '选项1',
+          value: '已发',
           label: '已发'
         }, {
-          value: '选项2',
+          value: '未发',
           label: '未发'
         }],
         options2: [{
-          value: '选项1',
+          value: '已打卡',
           label: '已打卡'
         }, {
-          value: '选项2',
+          value: '未打卡',
           label: '未打卡'
         }],
       },
-      /*created:function() {
+      created: function () {
+        var n = this;
         axios.post(
-                url()+"/staff/login"
-            ).then(function(res) {
-                var resData = res.data;
-                if(resData.status === "0") { //0表示成功，1表示失败
-                    console.log("1");
-                    alert(resData);
-                }else{
-                    console.log("2");
-                    alert(resData);
-                }
-            });
-      },*/
+          myurl + "/department/managerList"
+        ).then(function (res) {
+          var resData = res.data;
+          if (resData !== "") { //
+            console.log("me success");
+            n.$nextTick(function () {
+              n.tableData = resData;
+              this.total = resData.length;
+            })
+            console.log(resData);
+          } else {
+            console.log("me fail");
+            console.log(resData);
+          }
+          console.log(res);
+        });
+      },
       methods: {
-        open() {
+        open(id) {
           this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -296,14 +290,61 @@
               message: '已取消删除'
             });
           });
+          if (this.type == 'success') {
+            console.log('删除' + id);
+            /*axios.post('', id)
+            .then(function () {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });*/
+          } else {
+            console.log("不删除" + id);
+          }
         },
         handleSizeChange(val) {
-          this.pagesize=val;
-          console.log(`每页 ${val} 条`);
-      },
-     current_change:function(currentPage){
-        this.currentPage = currentPage;
-      }
+          this.pagesize = val;
+        },
+        current_change: function (currentPage) {
+          this.currentPage = currentPage;
+        },
+        addstaff: function () {
+          this.dialogFormVisible2 = false;
+          console.log(this.form);
+          axios.post('', this.form)
+            .then(function () {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        },
+        editstaff1: function (id) {
+          this.dialogFormVisible = true;
+          console.log(id);
+          /*axios.post('', this.form)
+            .then(function () {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });*/
+        },
+        editstaff2: function (id) {
+          this.dialogFormVisible = true;
+          console.log(this.form);
+          /*axios.post('', this.form)
+            .then(function () {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });*/
+        },
+        selectFn(id,e) {
+          console.log(id+"的某个状态:"+e);
+        }
       }
     });
   </script>
