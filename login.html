@@ -36,24 +36,30 @@
 <body>
   <div id="app">
     <h1 v-cloak style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">{{title}}</h1>
-    <el-input placeholder="请输入用户名" v-model="input1" clearable autocomplete="on" :class="{ input: is }"></el-input>
+    <el-input placeholder="请输入用户名" v-model="form.username" clearable auto-complete="on" :class="{ input: is }"></el-input>
     <div style="margin: 20px 0;"></div>
-      <el-input placeholder="请输入密码" v-model="input2"  show-password :class="{ input: is }"></el-input>
-      <el-button type="primary" :class="{button1:is}" v-cloak>{{button1}}</el-button>
+      <el-input placeholder="请输入密码" v-model="form.password"  show-password :class="{ input: is }"></el-input>
+      <el-button type="primary" :class="{button1:is}" v-cloak @click="login">{{button1}}</el-button>
       <el-button type="primary" :class="{button2:is}" v-cloak @click="sigin()">{{button2}}</el-button>
   </div>
 </body>
   <!-- import Vue before Element -->
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="lib/vue.js"></script>
+<script src="lib/myconfig.js"></script>
+<script src="lib/elementui/index.js"></script>
+<script src="lib/axios.min.js"></script>
   <!-- import JavaScript -->
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
   <script>
     new Vue({
       el: '#app',
       data: function() {
-        return { 
-          input1: '',
-          input2:'',
+        return {
+          form:{},
+          info:{
+            username:"aaa",
+            password:"bbb"
+          },
           title:'高校人力资源管理系统',
           button1:'登录',
           button2:'注册',
@@ -63,6 +69,21 @@
       methods:{
         sigin(){
           location.href="signin.html";
+        },
+        login:function () {
+          axios.post(
+                  myurl+"/staff/login",
+                  this.form
+          ).then(function(res) {
+            var resData = res.data;
+            if(resData !== "") { //0表示成功，1表示失败
+              console.log("login success");
+              location.href="index.html?sid="+resData.sid;
+            }else{
+              alert("账号或密码错误");
+              console.log("login fail");
+            }
+          });
         }
       }
     })
