@@ -80,9 +80,9 @@
             <div class="title">
                 <span>高校人力资源管理系统</span>
             </div>
-            <div @click="openGitHub" class="author">
+            <div @click="openIndex" class="author">
                 <i class="el-icon-location-outline author-github">{{username}}</i>
-                <img title="gitHub 主页" alt="@yuleGH" class="author-img author-github"
+                <img title="主页" class="author-img author-github"
                      src="img/me.png">
             </div>
         </el-header>
@@ -112,6 +112,7 @@
 <!-- 引入组件库 -->
 <script type="text/javascript" src="lib/vue.js"></script>
 <script type="text/javascript" src="lib/elementui/index.js"></script>
+<script src="lib/axios.min.js"></script>
 
 <script type="text/javascript">
     new Vue({
@@ -121,7 +122,7 @@
             aboutMeUrl: "aboutme.html",
             iframeUrl: "aboutme.html",
             username: "领导",
-
+            form:{username:"员工1",password:"001"},
             menus: [
                 {
                     name:"部门管理",
@@ -225,9 +226,28 @@
             open(url){
                 this.iframeUrl = url;
             },
-            openGitHub(){
+            openIndex(){
                 console.log("不是所有按钮都有用");
             }
+        },
+        created:function () {
+            console.log("created");
+            var url = "http://192.168.137.1:8080/HRMS_war";
+            //          1.可以直接传入字符串 name=张三&age=19
+            //          2.可以以对象的形式传入{name:"三",age:19}
+            axios.post(
+                url+"/staff/login",
+                "username=员工1&password=001"
+            ).then(function(res) {
+                var resData = res.data;
+                if(resData.status === "0") { //0表示成功，1表示失败
+                    console.log("1");
+                    alert(resData);
+                }else{
+                    console.log("2");
+                    alert(resData);
+                }
+            });
         }
     });
 </script>
