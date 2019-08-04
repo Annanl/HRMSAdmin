@@ -61,7 +61,8 @@
 <!-- 引入组件库 -->
 <script type="text/javascript" src="lib/vue.js"></script>
 <script type="text/javascript" src="lib/elementui/index.js"></script>
-
+<script src="lib/myconfig.js"></script>
+<script src="lib/axios.min.js"></script>
 <script type="text/javascript">
     new Vue({
         el: "#app",
@@ -89,6 +90,28 @@
             daka:function () {
                 console.log("daka");
             }
+        },
+        created() {
+            console.log("created");
+            this.info.sid = getParam("sid");
+            var aaa = this;
+            axios.post(
+                myurl+"/staff/findStaff",
+                this.info
+            ).then(function(res) {
+                var resData = res.data;
+                if(resData !== "") { //0表示成功，1表示失败
+                    aaa.$nextTick(function () {
+                        aaa.info = resData
+                    })
+                    console.log("me success");
+                    console.log(resData);
+                }else{
+                    console.log("me fail");
+                    console.log(resData);
+                }
+                console.log(res);
+            });
         }
     });
 </script>

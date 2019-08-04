@@ -75,6 +75,10 @@
             display: none;
         }
     </style>
+    <script type="text/javascript" src="lib/vue.js"></script>
+    <script type="text/javascript" src="lib/elementui/index.js"></script>
+    <script src="lib/axios.min.js"></script>
+    <script src="lib/myconfig.js"></script>
 </head>
 <body>
 <div id="app">
@@ -84,8 +88,8 @@
                 <span>高校人力资源管理系统</span>
             </div>
             <div @click="openIndex" class="author" v-cloak>
-                <i class="el-icon-location-outline author-github">{{username}}</i>
-                <img title="gitHub 主页" alt="@yuleGH" class="author-img author-github"
+                <i class="el-icon-location-outline author-github">{{info.username}}</i>
+                <img class="author-img author-github"
                      src="img/me.png">
             </div>
         </el-header>
@@ -114,19 +118,15 @@
     </el-container>
 </div>
 <!-- 引入组件库 -->
-<script type="text/javascript" src="lib/vue.js"></script>
-<script type="text/javascript" src="lib/elementui/index.js"></script>
-<script src="lib/axios.min.js"></script>
-<script src="lib/vue-router.js"></script>
-<script src="lib/myconfig.js"></script>
+
 <script type="text/javascript">
     new Vue({
         el: "#app",
         data: {
             activeIndex: "1",
-            aboutMeUrl: "aboutme.html",
-            iframeUrl: "aboutme.html",
-            username: "领导",
+            aboutMeUrl: "aboutme.html?sid=",
+            iframeUrl: "aboutme.html?sid=",
+            info:{username: "领导"},
             form:{},
             menus: [
                 {
@@ -175,55 +175,6 @@
                             ]
                         }
                     ]
-                },
-                {
-                    name: "Table",
-                    id: "Table",
-                    iconClass: "el-icon-tickets",
-                    children: [
-                        {
-                            name: "自定义列模板",
-                            id: "ZDYLMB",
-                            children: [
-                                {name: "全部都是自定义列", id: "zdylmb-demo1", url: "table/defineTemplateSelf.html"},
-                                {name: "动态渲染整个表格", id: "dynamic-table", url: "table/dynamicTable.html"}
-                            ]
-                        },
-                        {
-                            name: "多选表格",
-                            id: "DXBG",
-                            children: [
-                                {name: "反正官网上没有这个demo", id: "DXBG-demo1", url: "table/checkbox1.html"}
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "Dialog",
-                    id: "Dialog",
-                    iconClass: "el-icon-message",
-                    children: [
-                        {
-                            name: "Notification 通知",
-                            id: "notification",
-                            children: [
-                                {name: "使用vNode", id: "noti-demo1", url: "dialog/notification/notification.html"}
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: "其他",
-                    id: "other",
-                    children: [
-                        {
-                            name: "跳转页面",
-                            id: "other-skip-page",
-                            children: [
-                                {name: "在当页来回跳转", id: "other-skip-cur", url: "other/skipPage.html"}
-                            ]
-                        }
-                    ]
                 }
             ]
         },
@@ -231,19 +182,25 @@
             open(url){
                 this.iframeUrl = url;
             },
-            openGitHub(){
+            openIndex(){
                 console.log("不是所有按钮都有用");
             }
         },
-        created:function () {
+        created() {
             console.log("created");
             this.form.sid = getParam("sid");
+            this.aboutMeUrl += getParam("sid");
+            this.iframeUrl += getParam("sid");
+            var aaa = this;
             axios.post(
                 myurl+"/staff/findStaff",
                 this.form
             ).then(function(res) {
                 var resData = res.data;
                 if(resData !== "") { //0表示成功，1表示失败
+                    aaa.$nextTick(function () {
+                        aaa.info = resData
+                    })
                     console.log("me success");
                     console.log(resData);
                 }else{
