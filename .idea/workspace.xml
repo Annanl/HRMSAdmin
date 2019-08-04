@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d162d29a-6d86-4f82-bb0f-8d34d648afd8" name="Default Changelist" comment="" />
+    <list default="true" id="d162d29a-6d86-4f82-bb0f-8d34d648afd8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -92,17 +94,6 @@
             <path>
               <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
               <item name="hrmsadmin" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hrmsadmin" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="elementui" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="HRMSAdmin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hrmsadmin" type="462c0819:PsiDirectoryNode" />
               <item name="table" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -159,16 +150,15 @@
       <workItem from="1564719685590" duration="7539000" />
       <workItem from="1564792371031" duration="4018000" />
       <workItem from="1564801149212" duration="7904000" />
-      <workItem from="1564877254502" duration="17914000" />
+      <workItem from="1564877254502" duration="18235000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58994000" />
+    <option name="totallyTimeSpent" value="59315000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19418758" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
