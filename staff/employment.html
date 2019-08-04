@@ -1,152 +1,97 @@
 <html>
 
 <head>
-    <title>自定义列模板</title>
+    <title>应聘管理</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="../lib/elementui/theme-chalk/index.css" type="text/css">
 </head>
+
 <body>
-<div id="app">
+    <div id="app">
+        <template>
+            <el-table :data="tableData" height="640" border style="width: 100%">
+                <el-table-column prop="name" label="姓名" width="120">
+                </el-table-column>
+                <el-table-column prop="department" label="应聘部门" width="150">
+                </el-table-column>
+                <el-table-column prop="address" label="地址">
+                </el-table-column>
+                <el-table-column label="操作" width="300">
+                    <template slot-scope="props">
+                        <el-button type="primary" size='mini' @click="outerVisible = true" round>查看简历</el-button>
+                        <el-button type="info" size='mini' round disabled>审核状态</el-button>
+                        <el-button type="danger" size='mini' round>删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+        <template>
+            <el-dialog title="信息" :visible.sync="outerVisible">
+                <label>工号</label>
+                <span>{{id}}</span>
+                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                <label>姓名</label>
+                <span></span>
+                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                <label>性别</label>
+                <span></span>
+                <br />
+                <label>电话</label>
+                <span></span>
+                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                <label>地址</label>
+                <span></span>
+                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+                <label>应聘部门</label>
+                <span></span>
+                <el-dialog width="30%" title="审核" :visible.sync="innerVisible" append-to-body>
+                    <el-button type="success" round>通过</el-button>
+                    <el-button type="danger" round>打回</el-button>
+                    <el-button type="info" round @click="innerVisible = false;outerVisible = false">取消
+                    </el-button>
+                </el-dialog>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="outerVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="innerVisible = true">审核</el-button>
+                </div>
+            </el-dialog>
+        </template>
 
-    <p style="color: red;">所有的打印数据，均在打印区里。
-        表格上是否有钱这列是el-checkbox，绑定了v-model</p>
-
-    <el-table :data="tableData" style="width: 100%">
-
-        <el-table-column label="出生日期" width="180">
-            <template slot-scope="scope">
-                <i class="el-icon-time"></i>
-                <span style="margin-left: 10px">{{ scope.row.date }}</span>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="姓名" width="100">
-            <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                    <p>姓名: {{ scope.row.name }}</p>
-                    <p>住址: {{ scope.row.address }}</p>
-                    <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                    </div>
-                </el-popover>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="是否有钱" width="100">
-            <template slot-scope="scope">
-                <el-checkbox v-model="scope.row.isRich">是</el-checkbox>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="备注" width="180">
-            <template slot-scope="scope">
-                <el-input v-model="scope.row.remark" placeholder="请输入备注"></el-input>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="选择框" width="180">
-            <template slot-scope="scope">
-                <el-select v-model="scope.row.selectOption" clearable placeholder="请选择">
-                    <el-option
-                            v-for="item in selectOptions"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                    </el-option>
-                </el-select>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="性别" width="180">
-            <template slot-scope="scope">
-                <el-radio v-model="scope.row.sex" label="0">女</el-radio>
-                <el-radio v-model="scope.row.sex" label="1">男</el-radio>
-            </template>
-        </el-table-column>
-
-        <el-table-column label="操作">
-            <template slot-scope="scope">
-                <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除                </el-button>
-            </template>
-        </el-table-column>
-
-    </el-table>
-
-    <br/>
-
-    <el-button type="primary" plain @click="getTabelData">获取表格数据</el-button>
-    <div style="margin-top: 20px">
-        <span>打印区</span>
-        <el-input type="textarea" v-model="printStr"></el-input>
     </div>
-</div>
 
-<!-- 引入组件库 -->
-<script type="text/javascript" src="../lib/vue.js"></script>
-<script type="text/javascript" src="../lib/elementui/index.js"></script>
-
-<script type="text/javascript">
-
-    new Vue({
-        el: "#app",
-        data: {
-            printStr: "",
-
-            selectOptions : [
-                {value : "1", label : "选择一"},
-                {value : "2", label : "选择二"},
-                {value : "3", label : "选择三"},
-            ],
-
-            tableData: [{
-                date: '2000-10-27',
-                name: '余小乐',
-                address: '北京',
-                isRich: false,
-                remark : "我是备注",
-                selectOption : "2",
-                sex : "0"
-            }, {
-                date: '2016-05-04',
-                name: '王小虎',
-                address: '上海市普陀区金沙江路 1517 弄',
-                isRich: true,
-                remark : "",
-                selectOption : "",
-                sex : "1"
-            }, {
-                date: '2016-05-01',
-                name: '小花',
-                address: '重庆市璧山区',
-                isRich: true,
-                remark : "",
-                selectOption : "",
-                sex : "0"
-            }, {
-                date: '1998-05-03',
-                name: '二哈',
-                address: '成都',
-                isRich: false,
-                remark : "",
-                selectOption : "",
-                sex : "1"
-            }]
-        },
-        methods: {
-            handleEdit(index, row) {
-                this.printStr = "点击编辑；index=" + index + "；row=" + JSON.stringify(row);
+    <!-- 引入组件库 -->
+    <script type="text/javascript" src="../lib/vue.js"></script>
+    <script type="text/javascript" src="../lib/elementui/index.js"></script>
+    <script type="text/javascript">
+        new Vue({
+            el: "#app",
+            data: {
+                outerVisible: false,
+                innerVisible: false,
+                tableData: [{
+                    date: '2019-08-03',
+                    id: '01',
+                    name: '员工1',
+                    phone: '123456',
+                    address: '河南省郑州市中原区绿东村街道146号中原工学院软件学院',
+                    gender: '男',
+                    department: '部门一'
+                },
+                {
+                    date: '2019-08-03',
+                    id: '02',
+                    name: '员工2',
+                    phone: '123456',
+                    address: '河南省郑州市',
+                    gender: '女',
+                    department: '部门一'
+                }]
             },
-            handleDelete(index, row) {
-                this.printStr = "点击删除；index=" + index + "；row=" + JSON.stringify(row);
-            },
-            getTabelData(){
-                this.printStr = "表格数据：" + JSON.stringify(this.tableData);
+            methods: {
+
             }
-        }
-    });
-</script>
-
+        });
+    </script>
 </body>
 
 </html>

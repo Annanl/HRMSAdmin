@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>注册</title>
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    body {
+      background: url("img/1.jpg") no-repeat;
+      background-size: 100%;
+      overflow: scroll;
+      overflow-x: hidden;
+      overflow-y: hidden;
+    }
+    #app{
+      position: relative;
+      left: 560px;
+      top: 300px;
+    }
+      [v-cloak] {
+         display: none
+     }
+  </style>
+</head>
+<body>
+  <div id="app">
+      <h1 v-cloak style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">{{title}}</h1>
+    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="密码" prop="pass">
+          <el-input type="password" v-model="ruleForm.pass" autocomplete="off" style="width: 220px;" ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码" prop="checkPass">
+          <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" style="width: 220px;"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')" v-cloak>提交</el-button>
+          <el-button @click="resetForm('ruleForm')" v-cloak>重置</el-button>
+        </el-form-item>
+      </el-form>
+  </div>
+</body>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请再次输入密码'));
+        } else if (value !== this.ruleForm.pass) {
+          callback(new Error('两次输入密码不一致!'));
+        } else {
+          callback();
+        }
+        };
+        return { 
+          title:'高校人力资源管理系统',
+          ruleForm: {
+          pass: '',
+          checkPass: ''
+        },
+        rules: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'blur' }
+          ]
+        }
+        }
+      },
+      methods:{
+        submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
+    }
+    })
+  </script>
+</html>
