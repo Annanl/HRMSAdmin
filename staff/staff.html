@@ -25,11 +25,41 @@
 <body>
   <div id="app">
     <el-button type="success" icon="el-icon-plus" @click="dialogFormVisible2=true" circle></el-button>
-
     <template>
+
       <div class="container_table">
         <el-table :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="width: 100%" stripe
           style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}">
+          <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-form label-position="left" inline class="demo-table-expand">
+                  <el-form-item label="工号">
+                    <span>{{ props.row.id }}</span>
+                  </el-form-item>
+                  <el-form-item label="姓名">
+                    <span>{{ props.row.name }}</span>
+                  </el-form-item>
+                  <el-form-item label="性别">
+                    <span>{{ props.row.gender }}</span>
+                  </el-form-item>
+                  <el-form-item label="电话">
+                    <span>{{ props.row.phone }}</span>
+                  </el-form-item>
+                  <el-form-item label="地址">
+                    <span>{{ props.row.address }}</span>
+                  </el-form-item>
+                  <el-form-item label="职位">
+                    <span>{{ props.row.position }}</span>
+                  </el-form-item>
+                  <el-form-item label="部门">
+                    <span>{{ props.row.department }}</span>
+                  </el-form-item>
+                  <el-form-item label="薪资">
+                    <span>{{ props.row.salary }}</span>
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
           <el-table-column label="工号" prop="id">
           </el-table-column>
           <el-table-column label="姓名" prop="name">
@@ -66,7 +96,8 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination class="fy" layout="prev, pager, next" @current-change="current_change" :total="total" background>
+        <el-pagination  @size-change="handleSizeChange" @current-change="current_change" layout="total, sizes, prev, pager, next, jumper"  :page-sizes="pagesizes" :page-size="pagesize"
+        :total="total"  background>
         </el-pagination>
         </div>
     </template>
@@ -165,13 +196,14 @@
       data: {
         radio: '1',
         currentPage: 1,
-        pagesize: 2,
+        pagesizes:[5,10,15],
+        pagesize:5,
         formLabelWidth: '120px',
         value1: '',
         value2: '',
         dialogFormVisible: false,
         dialogFormVisible2: false,
-        total:100,
+        total:3,
         tableData: [
           {
             id: '01',
@@ -265,12 +297,9 @@
             });
           });
         },
-     
-      switchChange(){
-          this.istag = !this.istag ;
-      },
-      created:function(){
-         this.total=this.tableData.length;
+        handleSizeChange(val) {
+          this.pagesize=val;
+          console.log(`每页 ${val} 条`);
       },
      current_change:function(currentPage){
         this.currentPage = currentPage;
