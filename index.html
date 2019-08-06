@@ -71,7 +71,7 @@
             color: #4b595f;
         }
 
-        [v-cloak]{
+        [v-cloak] {
             display: none;
         }
     </style>
@@ -87,13 +87,25 @@
             <div class="title">
                 <span>高校人力资源管理系统</span>
             </div>
-            <div @click="openIndex" class="author" v-cloak>
-                <i class="el-icon-location-outline author-github">{{info.username}}</i>
-                <img class="author-img author-github"
-                     src="img/me.png">
+            <div class="author" v-cloak>
+                <div @click="centerDialogVisible = !centerDialogVisible">
+                    <i class="el-icon-location-outline author-github">{{info.username}}</i>
+                    <img class="author-img author-github"
+                         src="img/me.png" alt="head.png">
+                </div>
             </div>
         </el-header>
-
+        <el-dialog
+                title="提示"
+                :visible.sync="centerDialogVisible"
+                width="30%"
+                center>
+            <span>是否退出登录</span>
+            <span slot="footer" class="dialog-footer">
+    <el-button @click="centerDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="logout">确 定</el-button>
+  </span>
+        </el-dialog>
         <el-container>
             <el-aside class="left">
                 <el-menu :default-active="activeIndex" class="totalUl" v-cloak>
@@ -124,90 +136,49 @@
         el: "#app",
         data: {
             activeIndex: "1",
-            aboutMeUrl: "aboutme.html?sid=",
-            iframeUrl: "aboutme.html?sid=",
-            info:{username: "领导"},
-            form:{},
-            menus: [
-                {
-                    name:"部门管理",
-                    id:"departmentManager",
-                    iconClass:"el-icon-edit-outline",
-                    children:[
-                        {
-                            //name:"部门管理",
-                            id:"departmentManager",
-                            children:[
-                                {
-                                    name:"部门列表",
-                                    id:"departmentManager",
-                                    url:"department/department.html"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name:"员工管理",
-                    id:"staffManager",
-                    iconClass:"el-icon-tickets",
-                    children:[
-                        {
-                            //name:"在职教职工",
-                            id:"staff",
-                            children:[
-                                {
-                                    name:"在职教职工",
-                                    id:"staff",
-                                    url:"staff/staff.html"
-                                }
-                            ]
-                        },
-                        {
-                            //name:"应聘管理",
-                            id:"employment",
-                            children:[
-                                {
-                                    name:"应聘管理",
-                                    id:"employment",
-                                    url:"staff/employment.html"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
+            centerDialogVisible:false,
+            aboutMeUrl: "",
+            iframeUrl: "",
+            info: {username: "欢迎"},
+            form: {},
+            visible: false,
+            menus: []
         },
         methods: {
-            open(url){
+            logout() {
+                location.href = "login.html";
+            },
+            open(url) {
                 this.iframeUrl = url;
             },
-            openIndex(){
+            openIndex() {
                 console.log("不是所有按钮都有用");
             }
         },
-        created() {
+        mounted() {
             console.log("created");
             this.form.sid = getParam("sid");
-            this.aboutMeUrl += getParam("sid");
-            this.iframeUrl += getParam("sid");
             var aaa = this;
             axios.post(
-                myurl+"/staff/findStaff",
+                myurl + "/staff/findStaff",
                 this.form
-            ).then(function(res) {
+            ).then(function (res) {
                 var resData = res.data;
-                if(resData !== "") { //0表示成功，1表示失败
-                    aaa.$nextTick(function () {
-                        aaa.info = resData
-                    })
-                    console.log("me success");
-                    console.log(resData);
-                }else{
+                if (resData !== "") { //0表示成功，1表示失败
+                    aaa.info = resData;
+                    aaa.menus = getMenu(aaa.info.position);
+                    console.log("me success" + aaa.info.position);
+                } else {
                     console.log("me fail");
-                    console.log(resData);
                 }
                 console.log(res);
+                if (aaa.info.position === "应聘人员") {
+                    aaa.aboutMeUrl = "employment/employment.html?sid=" + getParam("sid");
+                    aaa.iframeUrl = "employment/employment.html?sid=" + getParam("sid");
+                }else {
+                    aaa.aboutMeUrl = "aboutme.html?sid=" + getParam("sid");
+                    aaa.iframeUrl = "aboutme.html?sid=" + getParam("sid");
+                }
             });
         }
     });

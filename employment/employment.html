@@ -22,14 +22,18 @@
 <div id="app">
     <div class="aboutme">
         <h2 class="ab_title">关于我</h2>
-        <div class="avatar" @click="employment">应 聘</div>
+        <div class="avatar" @click="employmentReady">应 聘</div>
         <el-dialog title="填写应聘信息" :visible.sync="employmentWindow" v-cloak>
             <el-form :model="employment">
                 <el-form-item label="应聘部门" :label-width="formLabelWidth">
-                    <el-input v-model="employment.department" auto-complete="off"></el-input>
+                    <el-select v-model="employment.departmentId" placeholder="请选择应聘部门">
+                        <el-option v-for="item in departmentList" :label="item.name" :value="item.pid" :key="item.pid">{{item.name}}</el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="应聘职位" :label-width="formLabelWidth">
-                    <el-input v-model="employment.position" auto-complete="off"></el-input>
+                    <el-select v-model="employment.position" placeholder="请选择应聘职位">
+                        <el-option v-for="item in positionList" :label="item.name" :value="item.name" :key="item.name">{{item.name}}</el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -44,13 +48,16 @@
             <p>联系地址：{{info.address}}</p>
             <p>应聘部门：{{info.department}}</p>
             <p>应聘职位：{{info.position}}</p>
-            <p>应聘状态：{{info.employ_status}}</p>
+            <p>应聘状态：{{info.employStatus>-1?"请等待":"请提交应聘请求"}}</p>
             <el-button type="text" @click="updateWindow">修改个人信息</el-button>
 
             <el-dialog title="修改个人信息" :visible.sync="dialogFormVisible">
                 <el-form :model="form">
                     <el-form-item label="姓名" :label-width="formLabelWidth">
                         <el-input v-model="form.username" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" :label-width="formLabelWidth">
+                        <el-input v-model="form.password" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="性别" :label-width="formLabelWidth">
                         <el-input v-model="form.gender" auto-complete="off"></el-input>
@@ -73,7 +80,8 @@
 <!-- 引入组件库 -->
 <script type="text/javascript" src="../lib/vue.js"></script>
 <script type="text/javascript" src="../lib/elementui/index.js"></script>
-
+<script src="../lib/myconfig.js"></script>
+<script src="../lib/axios.min.js"></script>
 <script type="text/javascript">
     new Vue({
         el: "#app",
@@ -82,30 +90,120 @@
             form:{},
             dialogFormVisible: false,
             employmentWindow:false,
-            formLabelWidth: '120px'
+            formLabelWidth: '120px',
+            departmentList:[],
+            positionList:[
+                {
+                    id:1,
+                    name:"领导"
+                },{
+                    id:2,
+                    name:"管理员"
+                },{
+                    id:3,
+                    name:"教职工"
+                }
+            ],
+            employment:{},
         },
         methods: {
             updateWindow:function(){
                 this.dialogFormVisible = true;
                 this.form.username = this.info.username;
+                this.form.password = this.info.password;
                 this.form.gender = this.info.gender;
                 this.form.tel = this.info.tel;
                 this.form.address = this.info.address;
             },
             updateDo:function(){
                 this.dialogFormVisible = false;
-                this.info.username = this.form.username;
-                this.info.gender = this.form.gender;
-                this.info.tel = this.form.tel;
-                this.info.address = this.form.address;
+                this.form.sid = this.info.sid;
+                axios.post(
+                    myurl+"/staff/update",
+                    this.form
+                ).then(function(res) {
+                    var resData = res.data;
+                    if(resData !== "") { //0表示成功，1表示失败
+                        console.log("update success");
+                        location.reload();
+                    }else{
+                        console.log("update fail");
+                    }
+                    console.log(resData);
+                });
             },
-            employment:function () {
-                this.employmentWindow = true;
+            employmentReady:function () {
+                if (this.info.position === "") {
+                    alert("应聘请求审核中");
+                }else {
+                    this.employmentWindow = true;
+                }
                 console.log("应聘");
             },
             employmentDo:function () {
                 console.log("确认应聘");
+                this.employment.sid = this.info.sid;
+                this.employment.username = this.info.username;
+                axios.post(
+                    myurl+"/employment/insert",
+                    this.employment
+                ).then(function(res) {
+                    var resData = res.data;
+                    if(resData !== "") { //0表示成功，1表示失败
+                        console.log("update success");
+                        location.reload();
+                    }else{
+                        console.log("update fail");
+                    }
+                    console.log(resData);
+                });
+                this.employmentWindow = false;
             }
+        },
+        mounted() {
+            console.log("mounted");
+            this.info.sid = getParam("sid");
+            var aaa = this;
+            axios.post(
+                myurl+"/staff/findStaffAllInfo",
+                this.info
+            ).then(function(res) {
+                var resData = res.data;
+                if(resData !== "") { //0表示成功，1表示失败
+                    aaa.info = resData;
+                    console.log("me success");
+                }else{
+                    console.log("me fail");
+                }
+                console.log(resData);
+            });
+            axios.post(
+                myurl+"/department/listDepartment"
+            ).then(function(res) {
+                var resData = res.data;
+                if(resData !== "") { //0表示成功，1表示失败
+                    aaa.departmentList = resData;
+                    console.log("departmentList success");
+                }else{
+                    console.log("departmentList fail");
+                }
+                console.log(resData);
+            });
+            axios.post(
+                myurl+"/employment/findEmployment",
+                this.info
+            ).then(function(res) {
+                var resData = res.data;
+                if(resData !== "") { //0表示成功，1表示失败
+                    aaa.info.position = resData.position;
+                    aaa.info.employmentStatus = resData.position;
+                    aaa.info.departmentId = resData.departmentId;
+                    console.log("me success");
+                }else{
+                    console.log("me fail");
+                }
+                console.log(resData);
+            });
         }
     });
 </script>

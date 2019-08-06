@@ -14,23 +14,23 @@
         <el-table-column label="部门" width="180">
             <template slot-scope="scope">
                 <i class="el-icon-arrow-right"></i>
-                <span style="margin-left: 10px">{{ scope.row.department }}</span>
+                <span style="margin-left: 10px">{{ scope.row.name }}</span>
             </template>
         </el-table-column>
 
-        <el-table-column label="管理员" width="130">
+        <el-table-column label="管理员" min-width="250">
             <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                    <p>姓名: {{ scope.row.username }}</p>
-                    <p>联系方式: {{ scope.row.tel }}</p>
+                <el-popover trigger="hover" placement="top" style="display: inline-block" v-for="manager in scope.row.managerList" :key='manager.pid'>
+                    <p>姓名: {{ manager.username }}</p>
+                    <p>联系方式: {{ manager.tel }}</p>
                     <div slot="reference" class="name-wrapper">
-                        <el-tag size="medium">{{ scope.row.username }}</el-tag>
+                        <el-tag size="medium">{{ manager.username }}</el-tag>
                     </div>
                 </el-popover>
             </template>
         </el-table-column>
 
-        <el-table-column label="操作">
+        <el-table-column label="操作" min-width="150">
             <template slot-scope="scope">
                 <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                 <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -42,7 +42,7 @@
     <el-dialog title="添加部门" :visible.sync="addWindow">
         <el-form :model="form">
             <el-form-item label="部门名称" :label-width="formLabelWidth">
-                <el-input v-model="form.department" auto-complete="off"></el-input>
+                <el-input v-model="form.name" auto-complete="off"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -53,13 +53,13 @@
     <el-dialog title="编辑部门信息" :visible.sync="editWindow">
         <el-form :model="form">
             <el-form-item label="部门名称" :label-width="formLabelWidth">
-                <el-input v-model="form.department" auto-complete="off"></el-input>
+                <el-input v-model="form.name" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="管理员" :label-width="formLabelWidth">
+            <!--<el-form-item label="管理员" :label-width="formLabelWidth">
                 <el-select v-model="form.sid" placeholder="请选择管理员">
                     <el-option v-for="item in usernameList" :label="item.username" :value="item.sid" :key="item.sid"></el-option>
                 </el-select>
-            </el-form-item>
+            </el-form-item>-->
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="handleEditDo">确 定</el-button>
@@ -81,7 +81,8 @@
 <!-- 引入组件库 -->
 <script type="text/javascript" src="../lib/vue.js"></script>
 <script type="text/javascript" src="../lib/elementui/index.js"></script>
-
+<script src="../lib/myconfig.js"></script>
+<script src="../lib/axios.min.js"></script>
 <script type="text/javascript">
 
     new Vue({
@@ -92,17 +93,45 @@
             editWindow:false,
             delWindow:false,
             formLabelWidth: '120px',
-            form:{
-                pid:"",
-                sid:"",
-                department:"",
-                username:""
+            form:{},
+            departmentId:{},
+            temp:{
+                managerList:[{
+                    id:1
+                }],
             },
             tableData: [{
                 id:'11',
                 department: '党委部门',
-                username: '余小乐',
-                tel: '18624890001',
+                managerList:[
+                    {
+                        username: '余小乐',
+                        tel: '18624890001',
+                    },
+                    {
+                        username: '余小乐',
+                        tel: '18624890001',
+                    },
+                    {
+                        username: '余小乐',
+                        tel: '18624890001',
+                    },
+                    {
+                        username: '余小乐',
+                        tel: '18624890001',
+                    },
+                    {
+                        username: '余小乐',
+                        tel: '18624890001',
+                    },{
+                        username: '余小乐',
+                        tel: '18624890001',
+                    },
+                    {
+                        username: '余小乐',
+                        tel: '18624890001',
+                    }
+                ]
             }, {
                 department: '行政部门',
                 username: '王小虎',
@@ -116,20 +145,19 @@
                 username: '二哈',
                 tel: '0371-6569304',
             }],
-            usernameList:[{
+            /*usernameList:[{
                     sid:'1',
                     username:"王小明"
                 }, {
                     sid:'2',
                     username:"刘小红"
-            }]
+            }]*/
         },
         methods: {
             handleEdit(index, row) {
                 this.printStr = "点击编辑；index=" + row.department + "；row=" + JSON.stringify(row);
-                this.form.department = row.department;
+                this.form.name = row.name;
                 this.form.pid = row.pid;
-                this.form.sid = this.usernameList[0].sid;
                 this.editWindow = true;
                 //获取部门内成员信息，填入usernameList，第一位为管理员
                 console.log(this.printStr);
@@ -137,6 +165,19 @@
             handleEditDo:function(){
                 console.log("确认编辑部门");
                 //发送编辑后的部门请求，数据为form.department，form.pid，form.sid
+                axios.post(
+                    myurl+"/department/update",
+                    this.form
+                ).then(function(res) {
+                    var resData = res.data;
+                    if(resData !== "") { //0表示成功，1表示失败
+                        location.reload();
+                        console.log("update success");
+                    }else{
+                        console.log("update fail");
+                    }
+                    console.log(resData);
+                });
                 this.editWindow = false;
             },
             handleDelete(index, row) {
@@ -148,17 +189,77 @@
             handleDeleteDo:function(){
                 this.delWindow = false;
                 //发送删除部门请求，数据为form.pid
+                axios.post(
+                    myurl+"/department/delete",
+                    this.form
+                ).then(function(res) {
+                    var resData = res.data;
+                    if(resData !== "") { //0表示成功，1表示失败
+                        location.reload();
+                        console.log("del success");
+                    }else{
+                        console.log("del fail");
+                    }
+                    console.log(resData);
+                });
                 console.log("确认删除部门");
             },
             addDepartment:function () {
                 console.log("添加部门");
-                this.form.department = "";
+                this.form.name = "";
                 this.addWindow = true;
             },
             addDepartmentDo:function () {
                 console.log("确认添加部门");
                 //发送添加部门请求，数据为form.department
+                axios.post(
+                    myurl+"/department/insert",
+                    this.form
+                ).then(function(res) {
+                    var resData = res.data;
+                    if(resData !== "") { //0表示成功，1表示失败
+                        location.reload();
+                        console.log("add success");
+                    }else{
+                        console.log("add fail");
+                    }
+                    console.log(resData);
+                });
                 this.addWindow = false;
+            }
+        },
+        async mounted() {
+            console.log("mounted");
+            var aaa = this;
+            await axios.post(
+                myurl + "/department/listDepartment"
+            ).then(function (res) {
+                var resData = res.data;
+                if (resData !== "") { //0表示成功，1表示失败
+                    aaa.tableData = resData;
+                    console.log("departmentList success");
+                } else {
+                    console.log("departmentList fail");
+                }
+                console.log(resData);
+            });
+            this.temp = this.tableData;
+            for (var i = 0; i < aaa.tableData.length; i++) {
+                var departmentForm = {};
+                departmentForm.pid = aaa.tableData[i].pid;
+                await axios.post(
+                    myurl + "/staff/findAllStaffByDepartmentId",
+                    departmentForm
+                ).then(function (res2) {
+                    var resData2 = res2.data;
+                    if (resData2 !== "") { //0表示成功，1表示失败
+                        aaa.temp = aaa.tableData[i];
+                        aaa.temp.managerList = resData2;
+                        aaa.tableData.splice(i, 1, aaa.temp);
+                    } else {
+                        console.log("managerList fail");
+                    }
+                });
             }
         }
     });

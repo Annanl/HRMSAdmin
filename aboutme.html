@@ -22,23 +22,26 @@
 <div id="app">
     <div class="aboutme">
         <h2 class="ab_title">关于我</h2>
-        <div class="avatar" @click="daka">打 卡</div>
+        <div class="avatar" @click="attendDo">打 卡</div>
         <div class="ab_con" v-cloak>
             <p>姓名：{{info.username}}</p>
             <p>性别：{{info.gender}}</p>
-            <p>部门：{{info.department}}</p>
+            <p>部门：{{info.name}}</p>
             <p>职位：{{info.position}}</p>
             <p>联系方式：{{info.tel}}</p>
             <p>联系地址：{{info.address}}</p>
-            <p>考勤：{{info.attend_status}}</p>
+            <p>考勤：{{info.attendStatus>0?"已打卡":"未打卡"}}</p>
             <p>薪酬：{{info.salary}}</p>
-            <p>薪酬状态：{{info.salary_status}}</p>
+            <p>薪酬状态：{{info.salaryStatus>0?"已发":"未发"}}</p>
             <el-button type="text" @click="updateWindow">修改个人信息</el-button>
 
             <el-dialog title="修改个人信息" :visible.sync="dialogFormVisible">
                 <el-form :model="form">
                     <el-form-item label="姓名" :label-width="formLabelWidth">
                         <el-input v-model="form.username" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码" :label-width="formLabelWidth">
+                        <el-input v-model="form.password" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="性别" :label-width="formLabelWidth">
                         <el-input v-model="form.gender" auto-complete="off"></el-input>
@@ -69,6 +72,7 @@
         data: {
             info:{},
             form:{},
+            attend:{},
             dialogFormVisible: false,
             formLabelWidth: '120px'
         },
@@ -79,38 +83,60 @@
                 this.form.gender = this.info.gender;
                 this.form.tel = this.info.tel;
                 this.form.address = this.info.address;
+                this.form.password = this.info.password;
             },
             updateDo:function(){
                 this.dialogFormVisible = false;
-                this.info.username = this.form.username;
-                this.info.gender = this.form.gender;
-                this.info.tel = this.form.tel;
-                this.info.address = this.form.address;
+                this.form.sid = this.info.sid;
+                axios.post(
+                    myurl+"/staff/update",
+                    this.form
+                ).then(function(res) {
+                    var resData = res.data;
+                    if(resData !== "") { //0表示成功，1表示失败
+                        console.log("update success");
+                        location.reload();
+                    }else{
+                        console.log("update fail");
+                    }
+                    console.log(resData);
+                });
             },
-            daka:function () {
+            attendDo:function () {
                 console.log("daka");
+                this.attend.sid = this.info.sid;
+                this.attend.attendStatus = 1;
+                axios.post(
+                    myurl+"/staff/update",
+                    this.attend
+                ).then(function(res) {
+                    var resData = res.data;
+                    if(resData !== "") { //0表示成功，1表示失败
+                        console.log("attend success");
+                        location.reload();
+                    }else{
+                        console.log("attend fail");
+                    }
+                    console.log(resData);
+                });
             }
         },
-        created() {
-            console.log("created");
+        mounted() {
+            console.log("mounted");
             this.info.sid = getParam("sid");
             var aaa = this;
             axios.post(
-                myurl+"/staff/findStaff",
+                myurl+"/staff/findStaffAllInfo",
                 this.info
             ).then(function(res) {
                 var resData = res.data;
                 if(resData !== "") { //0表示成功，1表示失败
-                    aaa.$nextTick(function () {
-                        aaa.info = resData
-                    })
+                    aaa.info = resData;
                     console.log("me success");
-                    console.log(resData);
                 }else{
                     console.log("me fail");
-                    console.log(resData);
                 }
-                console.log(res);
+                console.log(resData);
             });
         }
     });
