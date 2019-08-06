@@ -38,7 +38,7 @@
     <h1 v-cloak style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">{{title}}</h1>
     <el-input placeholder="请输入用户名" v-model="form.username" clearable auto-complete="on" :class="{ input: is }"></el-input>
     <div style="margin: 20px 0;"></div>
-      <el-input placeholder="请输入密码" v-model="form.password"  show-password :class="{ input: is }"></el-input>
+      <el-input placeholder="请输入密码" type="password" v-model="form.password"  show-password :class="{ input: is }"></el-input>
       <el-button type="primary" :class="{button1:is}" v-cloak @click="login">{{button1}}</el-button>
       <el-button type="primary" :class="{button2:is}" v-cloak @click="sigin()">{{button2}}</el-button>
   </div>

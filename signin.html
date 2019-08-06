@@ -36,6 +36,7 @@
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')" v-cloak>提交</el-button>
           <el-button @click="resetForm('ruleForm')" v-cloak>重置</el-button>
+          <el-button type="primary" @click="save" v-cloak>去登录</el-button>
         </el-form-item>
       </el-form>
   </div>
@@ -48,6 +49,7 @@
     new Vue({
       el: '#app',
       data: function() {
+
         var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入密码'));
@@ -70,7 +72,7 @@
         return { 
           title:'高校人力资源管理系统',
           ruleForm: {
-          pass: '',
+          pass: '',        
           checkPass: ''
         },
         rules: {
@@ -96,7 +98,10 @@
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-      }
+      },
+      save(){
+          location.href="login.html";
+        },
     }
     })
   </script>

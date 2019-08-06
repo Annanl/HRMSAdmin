@@ -28,7 +28,6 @@
 
 <body>
   <div id="app">
-    <el-button type="success" icon="el-icon-plus" @click="dialogFormVisible2=true" circle></el-button>
     <template>
 
       <div class="container_table">
@@ -72,7 +71,8 @@
           </el-table-column>
           <el-table-column label="薪资状态">
             <template slot-scope="props">
-              <el-select v-model='props.row.value1' placeholder="选择薪资状态" @change="selectFn(props.row.sid,$event)">
+              <el-select v-model='props.row.salaryStatus' placeholder="选择薪资状态"
+                @change="selectFn1(props.row.sid,$event)">
                 <el-option v-for="item in options1" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -80,7 +80,8 @@
           </el-table-column>
           <el-table-column label="打卡状态">
             <template slot-scope="props">
-              <el-select v-model='props.row.value2' placeholder="选择打卡状态"  @change="selectFn(props.row.sid,$event)">
+              <el-select v-model='props.row.attendStatus' placeholder="选择打卡状态"
+                @change="selectFn2(props.row.sid,$event)">
                 <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
@@ -95,7 +96,7 @@
               </el-tooltip>
               <!--删除-->
               <el-tooltip class="item" effect="dark" content="删除" placement="top">
-                <el-button type="danger" icon="el-icon-delete" circle @click="open(props.row.sid)"></el-button>
+                <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(props.row.sid)"></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -106,6 +107,13 @@
         </el-pagination>
       </div>
     </template>
+    <el-dialog title="提示" :visible.sync="delWindow" width="30%">
+      <span v-cloak>请确认是否删除该员工</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="delWindow = false" v-cloak>取 消</el-button>
+        <el-button type="primary" @click="handleDeleteDo" v-cloak>确 定</el-button>
+      </span>
+    </el-dialog>
     <!--员工信息修改-->
     <el-dialog title="员工信息修改" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -113,7 +121,10 @@
           <el-input v-model="form.sid" disabled auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.username" auto-complete="off"></el-input>
+          <el-input v-model="form.username" disabled auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" :label-width="formLabelWidth">
+          <el-input v-model="form.password" disabled auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="性别" :label-width="formLabelWidth">
           <template>
@@ -127,16 +138,16 @@
         <el-form-item label="地址" :label-width="formLabelWidth">
           <el-input v-model="form.address" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="职位" :label-width="formLabelWidth">
-          <el-select v-model="form.position" placeholder="选择职位">
-            <el-option label="职位一" value="职位一"></el-option>
-            <el-option label="职位二" value="职位二"></el-option>
+        <el-form-item label="部门" :label-width="formLabelWidth">
+          <el-select v-model="form.departmentId" placeholder="选择部门">
+            <el-option v-for="item in departmentData" :key="item.pid" :label="item.name" :value="item.pid">
+            </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="部门" :label-width="formLabelWidth">
-          <el-select v-model="form.deparment" placeholder="选择部门">
-            <el-option label="部门一" value="部门一"></el-option>
-            <el-option label="部门二" value="部门二"></el-option>
+        <el-form-item label="职位" :label-width="formLabelWidth">
+          <el-select v-model="form.position" placeholder="选择职位">
+            <el-option v-for="item in positioninfo" :key="item.value" :label="item.positionname" :value="item.value">
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="薪资" :label-width="formLabelWidth">
@@ -146,48 +157,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button v-cloak @click="dialogFormVisible = false">取 消</el-button>
         <el-button v-cloak type="primary" @click="editstaff2">确 定</el-button>
-      </div>
-    </el-dialog>
-    <!--员工信息增加-->
-    <el-dialog title="员工信息增加" :visible.sync="dialogFormVisible2">
-      <el-form :model="form">
-        <el-form-item label="工号" :label-width="formLabelWidth">
-          <el-input v-model="form.sid" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名" :label-width="formLabelWidth">
-          <el-input v-model="form.username" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="性别" :label-width="formLabelWidth">
-          <template>
-            <el-radio v-model="form.gender" label="男"></el-radio>
-            <el-radio v-model="form.gender" label="女"></el-radio>
-          </template>
-        </el-form-item>
-        <el-form-item label="电话" :label-width="formLabelWidth">
-          <el-input v-model="form.tel" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="地址" :label-width="formLabelWidth">
-          <el-input v-model="form.address" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="职位" :label-width="formLabelWidth">
-          <el-select v-model="form.position" placeholder="选择职位">
-            <el-option label="职位一" value="职位一"></el-option>
-            <el-option label="职位二" value="职位二"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="部门" :label-width="formLabelWidth">
-          <el-select v-model="form.deparmentId" placeholder="选择部门">
-            <el-option label="部门一" value="部门一"></el-option>
-            <el-option label="部门二" value="部门二"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="薪资" :label-width="formLabelWidth">
-          <el-input v-model="form.salary" auto-complete="off" onkeyup="value=value.replace(/[^\d]/g,'')"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button v-cloak @click="dialogFormVisible2 = false">取 消</el-button>
-        <el-button v-cloak type="primary" @click="addstaff">确 定</el-button>
       </div>
     </el-dialog>
     </template>
@@ -210,53 +179,87 @@
         value2: '',
         dialogFormVisible: false,
         dialogFormVisible2: false,
+        delWindow: false,
         total: 1,
+        statuscode:[ {
+          code: ''
+        }],
+        delete: {
+          sid: 0
+        },
+        edit: {
+          sid: 0,
+        },
+        salarystatus: {
+          sid: 0,
+          salaryStatus: ''
+        },
+        attendstatus: {
+          sid: 0,
+          attendStatus: ''
+        },
+        positioninfo: [{
+          value: '',
+          positionname: ''
+        }],
         tableData: [
           {
-            pid:'',
+            pid: '',
             sid: '',
             username: '',
             password: '',
             tel: '',
             address: '',
-            attend_status: '',
+            attendStatus: '',
             gender: '',
             position: '',
-            name:'',
-            department_Id: '',
-            authority: '',
+            name: '',
+            departmentId: '',
             salary: '',
-            salary_status: ''
+            salaryStatus: ''
           }],
+        departmentData: [{
+          pid: '',
+          name: ''
+        }],
         form: {
-          id: '',
-          name: '',
-          phone: '',
+          sid: '',
+          username: '',
+          password: '',
+          tel: '',
           address: '',
           gender: '',
           position: '',
-          department: '',
+          departmentId: '',
           salary: ''
         },
         options1: [{
-          value: '已发',
+          value: 1,
           label: '已发'
         }, {
-          value: '未发',
+          value: 0,
           label: '未发'
         }],
         options2: [{
-          value: '已打卡',
+          value: 1,
           label: '已打卡'
         }, {
-          value: '未打卡',
+          value: 0,
           label: '未打卡'
         }],
       },
       created: function () {
         var n = this;
+        if (getParamInner("position") == "领导") {
+          n.statuscode=[{code:'领导'},{ code:'管理员'}, { code:'教职工'}, { code:'应聘人员'}];
+          n.positioninfo = [{ value: '领导', positionname: '领导' }, { value: '管理员', positionname: '管理员' }, { value: '教职工', positionname: '教职工' }, { value: '应聘人员', positionname: '应聘人员' }];
+        } else if (getParamInner("position") == "管理员") {
+           n.statuscode=[{ code:'管理员'}, { code:'教职工'}, { code:'应聘人员'}];
+          n.positioninfo = [{ value: '管理员', positionname: '管理员' }, { value: '教职工', positionname: '教职工' }, { value: '应聘人员', positionname: '应聘人员' }];
+        }
+        console.log(n.statuscode);
         axios.post(
-          myurl + "/department/managerList"
+          myurl + "/department/managerList", this.statuscode
         ).then(function (res) {
           var resData = res.data;
           if (resData !== "") { //
@@ -264,6 +267,26 @@
             n.$nextTick(function () {
               n.tableData = resData;
               this.total = resData.length;
+
+            })
+            console.log(resData);
+          } else {
+            console.log("me fail");
+            console.log(resData);
+          }
+          console.log(res);
+        });
+      },
+      beforeCreate() {
+        var n = this;
+        axios.post(
+          myurl + "/department/listDepartment"
+        ).then(function (res) {
+          var resData = res.data;
+          if (resData !== "") { //
+            console.log("me success");
+            n.$nextTick(function () {
+              n.departmentData = resData;
             })
             console.log(resData);
           } else {
@@ -274,77 +297,113 @@
         });
       },
       methods: {
-        open(id) {
-          this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消删除'
-            });
-          });
-          if (this.type == 'success') {
-            console.log('删除' + id);
-            /*axios.post('', id)
-            .then(function () {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });*/
-          } else {
-            console.log("不删除" + id);
-          }
-        },
         handleSizeChange(val) {
           this.pagesize = val;
         },
         current_change: function (currentPage) {
           this.currentPage = currentPage;
         },
-        addstaff: function () {
-          this.dialogFormVisible2 = false;
-          console.log(this.form);
-          axios.post('', this.form)
-            .then(function () {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        },
+        /*获取要修改的员工的信息*/
         editstaff1: function (id) {
+          var n = this;
           this.dialogFormVisible = true;
-          console.log(id);
-          /*axios.post('', this.form)
-            .then(function () {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });*/
+          this.edit.sid = id;
+          console.log(this.edit);
+          axios.post(
+            myurl + "/staff/findStaff", this.edit
+          ).then(function (res) {
+            var resData = res.data;
+            if (resData !== "") {
+              console.log("me success");
+              n.$nextTick(function () {
+                n.form = resData;
+              })
+              console.log(resData);
+            } else {
+              console.log("me fail");
+              console.log(resData);
+            }
+            console.log(res);
+          });
         },
+        /*提交要修改的员工的信息*/
         editstaff2: function (id) {
-          this.dialogFormVisible = true;
+          this.dialogFormVisible = false;
           console.log(this.form);
-          /*axios.post('', this.form)
-            .then(function () {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });*/
+          axios.post(
+            myurl + "/staff/update", this.form
+          ).then(function (res) {
+            resData = res.data;
+            if (resData !== "") { //
+              console.log("me success");
+              location.reload();
+            } else {
+              console.log("me fail");
+            }
+            console.log(res);
+          });
         },
-        selectFn(id,e) {
-          console.log(id+"的某个状态:"+e);
-        }
+        /*薪资状态*/
+        selectFn1(id, e) {
+          this.salarystatus.sid = id;
+          this.salarystatus.salaryStatus = e;
+          console.log(this.salarystatus);
+          axios.post(
+            myurl + "/staff/update", this.salarystatus
+          ).then(function (res) {
+            var resData = res.data;
+            if (resData !== "") { //
+              console.log("me success");
+              location.reload();
+              console.log(resData);
+            } else {
+              console.log("me fail");
+              console.log(resData);
+            }
+            console.log(res);
+          });
+        },
+        /*打卡状态*/
+        selectFn2(id, e) {
+          this.attendstatus.sid = id;
+          this.attendstatus.attendStatus = e;
+          console.log(this.attendstatus);
+          axios.post(
+            myurl + "/staff/update", this.attendstatus
+          ).then(function (res) {
+            var resData = res.data;
+            if (resData !== "") { //
+              console.log("me success");
+              location.reload();
+              console.log(resData);
+            } else {
+              console.log("me fail");
+              console.log(resData);
+            }
+            console.log(res);
+          });
+        },
+        handleDelete(id) {
+          this.delWindow = true;
+          this.delete.sid = id;
+        },
+        handleDeleteDo: function () {
+          this.delWindow = false;
+          console.log(this.delete);
+          axios.post(
+            myurl + "/staff/delete", this.delete
+          ).then(function (res) {
+            var resData = res.data;
+            if (resData !== "") { //
+              location.reload();
+              console.log("me success");
+            } else {
+              console.log("me fail");
+            }
+            console.log(res);
+          });
+        },
+
       }
     });
   </script>

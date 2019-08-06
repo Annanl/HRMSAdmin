@@ -4,56 +4,53 @@
     <title>应聘管理</title>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="../lib/elementui/theme-chalk/index.css" type="text/css">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
         <template>
-            <el-table :data="tableData" height="640" border style="width: 100%">
-                <el-table-column prop="name" label="姓名" width="120">
+            <el-table :data="tableData" height="600" border style="width: 100%">
+                <el-table-column prop="eid" label="应聘编号">
                 </el-table-column>
-                <el-table-column prop="department" label="应聘部门" width="150">
+                <el-table-column prop="sid" label="工号">
                 </el-table-column>
-                <el-table-column prop="address" label="地址">
+                <el-table-column prop="username" label="姓名">
                 </el-table-column>
-                <el-table-column label="操作" width="300">
+                <el-table-column prop="name" label="应聘部门">
+                </el-table-column>
+                <el-table-column prop="position" label="应聘职位">
+                </el-table-column>
+                <el-table-column prop="employStatus" label="审核状态">
                     <template slot-scope="props">
-                        <el-button type="primary" size='mini' @click="outerVisible = true" round>查看简历</el-button>
-                        <el-button type="info" size='mini' round disabled>审核状态</el-button>
-                        <el-button type="danger" size='mini' round>删除</el-button>
+                        <el-button type="info" size='mini' round disabled>{{props.row.checkstatus}}</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="props">
+                        <el-button type="primary" size='mini' @click="changechecknum(props.row)" round>审核</el-button>
+                        <el-button size="mini" type="danger" @click="handleDelete(props.row)" round>删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </template>
+        <el-dialog title="提示" :visible.sync="delWindow" width="30%">
+            <span v-cloak>请确认是否删除该员工</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="delWindow = false" v-cloak>取 消</el-button>
+                <el-button type="primary" @click="handleDeleteDo" v-cloak>确 定</el-button>
+            </span>
+        </el-dialog>
         <template>
-            <el-dialog title="信息" :visible.sync="outerVisible">
-                <label>工号</label>
-                <span>{{id}}</span>
-                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                <label>姓名</label>
-                <span></span>
-                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                <label>性别</label>
-                <span></span>
-                <br />
-                <label>电话</label>
-                <span></span>
-                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                <label>地址</label>
-                <span></span>
-                &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
-                <label>应聘部门</label>
-                <span></span>
-                <el-dialog width="30%" title="审核" :visible.sync="innerVisible" append-to-body>
-                    <el-button type="success" round>通过</el-button>
-                    <el-button type="danger" round>打回</el-button>
-                    <el-button type="info" round @click="innerVisible = false;outerVisible = false">取消
-                    </el-button>
-                </el-dialog>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="outerVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="innerVisible = true">审核</el-button>
-                </div>
+            <el-dialog width="30%" title="审核" :visible.sync="innerVisible" append-to-body>
+                <el-button type="success" round @click='changecheck(1)'>通过</el-button>
+                <el-button type="danger" @click='changecheck(-1)' round>打回</el-button>
+                <el-button type="info" round @click="innerVisible = false">取消
+                </el-button>
             </el-dialog>
         </template>
 
@@ -62,33 +59,128 @@
     <!-- 引入组件库 -->
     <script type="text/javascript" src="../lib/vue.js"></script>
     <script type="text/javascript" src="../lib/elementui/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="../lib/myconfig.js"></script>
     <script type="text/javascript">
         new Vue({
             el: "#app",
             data: {
                 outerVisible: false,
                 innerVisible: false,
-                tableData: [{
-                    date: '2019-08-03',
-                    id: '01',
-                    name: '员工1',
-                    phone: '123456',
-                    address: '河南省郑州市中原区绿东村街道146号中原工学院软件学院',
-                    gender: '男',
-                    department: '部门一'
+                delWindow: false,
+                checkrow: 0,
+                checkid: 0,
+                delete: {
+                    eid: 0,
                 },
-                {
-                    date: '2019-08-03',
-                    id: '02',
-                    name: '员工2',
-                    phone: '123456',
-                    address: '河南省郑州市',
-                    gender: '女',
-                    department: '部门一'
+                updateinfo:{
+                    eid:0,
+                    employStatus:'',
+                },
+                tableData: [{
+                    eid: '',
+                    sid: '',
+                    username: '',
+                    name: '',
+                    employStatus: '',
+                    departmentId: '',
+                    position: '',
+                    checkstatus: ''
                 }]
             },
+            created: function () {
+                var n = this;
+                axios.post(
+                    myurl + "/employment/findAllEmploymentInfo"
+                ).then(function (res) {
+                    var resData = res.data;
+                    if (resData !== "") { 
+                        console.log("me success");
+                        n.$nextTick(function () {
+                            n.tableData = resData;
+                            for (var i = 0; i < resData.length; i++) {
+                                if (n.tableData[i].employStatus == 0) {
+                                    n.tableData[i].checkstatus = '未通过 ';
+                                } else {
+                                    n.tableData[i].checkstatus = '通过 ';
+                                }
+                            }
+                        })
+                    } else {
+                        console.log("me fail");
+                        console.log(resData);
+                    }
+                    console.log(res);
+                });
+            },
             methods: {
-
+                /*审核*/
+                changechecknum: function (row) {
+                    this.innerVisible = true;
+                    this.checkrow = row;
+                },
+                changecheck: function (flag) {
+                    if (flag == 1) {
+                        this.checkrow.employStatus = 1;     //通过
+                    } else {                                   //不通过
+                        this.checkrow.employStatus = 0;
+                    }
+                    this.updateinfo.eid = this.checkrow.eid;
+                    this.updateinfo.employStatus = this.checkrow.employStatus;
+                    console.log(this.checkrow) ;      
+                    axios.post(
+                    myurl + "/employment/update",this.updateinfo
+                ).then(function (res) {
+                    var resData = res.data;
+                    if (resData !== "") { 
+                        console.log("me success");
+                        console.log(resData);
+                        location.reload();
+                    } else {
+                        console.log("me fail");
+                        console.log(resData);
+                    }
+                    console.log(res);
+                });
+                  axios.post(
+                    myurl + "/employment/delete",this.updateinfo
+                ).then(function (res) {
+                    var resData = res.data;
+                    if (resData !== "") { 
+                        console.log("me success");
+                        console.log(resData);
+                        location.reload();
+                    } else {
+                        console.log("me fail");
+                        console.log(resData);
+                    }
+                    console.log(res);
+                });
+                    this.innerVisible = false;
+                },
+                /*删除*/
+                handleDelete(row) {
+                    this.delWindow = true;
+                    this.delete.eid = row.eid;
+                },
+                handleDeleteDo: function () {
+                    this.delWindow = false;
+                    console.log(this.delete);
+                    axios.post(
+                        myurl + "/employment/delete", this.delete
+                    ).then(function (res) {
+                        var resData = res.data;
+                        if (resData !== "") { 
+                            console.log("me success");
+                            console.log(resData);
+                            location.reload();
+                        } else {
+                            console.log("me fail");
+                            console.log(resData);
+                        }
+                        console.log(res);
+                    });
+                },
             }
         });
     </script>
