@@ -26,15 +26,15 @@
 <body>
   <div id="app">
       <h1 v-cloak style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">{{title}}</h1>
-    <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model="ruleForm.pass" autocomplete="off" style="width: 220px;" ></el-input>
+    <el-form :model="ruleForm" status-icon  ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="用户名" prop="username">
+          <el-input type="input" v-model="ruleForm.username" autocomplete="off" style="width: 220px;" ></el-input>
         </el-form-item>
-        <el-form-item label="确认密码" prop="checkPass">
-          <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" style="width: 220px;"></el-input>
+      <el-form-item label="密码" prop="pass">
+          <el-input type="input" v-model="ruleForm.password" autocomplete="off" style="width: 220px;" ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')" v-cloak>提交</el-button>
+          <el-button type="primary" @click="submitForm" v-cloak>提交</el-button>
           <el-button @click="resetForm('ruleForm')" v-cloak>重置</el-button>
           <el-button type="primary" @click="save" v-cloak>去登录</el-button>
         </el-form-item>
@@ -45,6 +45,8 @@
   <script src="https://unpkg.com/vue/dist/vue.js"></script>
   <!-- import JavaScript -->
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="lib/axios.min.js"></script>
+<script src="lib/myconfig.js"></script>
   <script>
     new Vue({
       el: '#app',
@@ -72,32 +74,27 @@
         return { 
           title:'高校人力资源管理系统',
           ruleForm: {
-          pass: '',        
-          checkPass: ''
+          username: '',
+          password: ''
         },
-        rules: {
-          pass: [
-            { validator: validatePass, trigger: 'blur' }
-          ],
-          checkPass: [
-            { validator: validatePass2, trigger: 'blur' }
-          ]
-        }
         }
       },
       methods:{
-        submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
+        submitForm() {
+        axios.post(
+          myurl + "/staff/insert", this.ruleForm
+        ).then(function (res) {
+          var resData = res.data;
+          if (resData !== "") {
+            console.log("me success");
+            console.log(resData);
+            location.href = "login.html";
           } else {
-            console.log('error submit!!');
-            return false;
+            console.log("me fail");
+            console.log(resData);
           }
+          console.log(res);
         });
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
       },
       save(){
           location.href="login.html";
