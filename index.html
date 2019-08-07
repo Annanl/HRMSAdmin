@@ -172,7 +172,7 @@
                     console.log("me fail");
                 }
                 console.log(res);
-                if (aaa.info.position === "应聘人员") {
+                if (aaa.info.position === "应聘人员"||aaa.info.position === null) {
                     aaa.aboutMeUrl = "employment/employment.html?sid=" + getParam("sid");
                     aaa.iframeUrl = "employment/employment.html?sid=" + getParam("sid");
                 }else {

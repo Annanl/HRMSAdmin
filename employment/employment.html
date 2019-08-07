@@ -46,7 +46,7 @@
             <p>性别：{{info.gender}}</p>
             <p>联系方式：{{info.tel}}</p>
             <p>联系地址：{{info.address}}</p>
-            <p>应聘部门：{{info.department}}</p>
+            <p>应聘部门：{{info.name}}</p>
             <p>应聘职位：{{info.position}}</p>
             <p>应聘状态：{{info.employStatus>-1?"请等待":"请提交应聘请求"}}</p>
             <el-button type="text" @click="updateWindow">修改个人信息</el-button>
@@ -133,7 +133,7 @@
                 });
             },
             employmentReady:function () {
-                if (this.info.position === "") {
+                if (this.info.position !== "应聘人员") {
                     alert("应聘请求审核中");
                 }else {
                     this.employmentWindow = true;
@@ -196,14 +196,20 @@
                 var resData = res.data;
                 if(resData !== "") { //0表示成功，1表示失败
                     aaa.info.position = resData.position;
-                    aaa.info.employmentStatus = resData.position;
+                    aaa.info.employStatus = resData.employStatus;
                     aaa.info.departmentId = resData.departmentId;
                     console.log("me success");
+                    for (var i=0;i<aaa.departmentList.length;i++){
+                        if (aaa.departmentList[i].pid === aaa.info.departmentId) {
+                            aaa.info.name = aaa.departmentList[i].name;
+                        }
+                    }
                 }else{
                     console.log("me fail");
                 }
                 console.log(resData);
             });
+
         }
     });
 </script>
